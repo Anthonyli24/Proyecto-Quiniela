@@ -1,0 +1,71 @@
+-- Procedimiento para validar login de usuario
+CREATE PROCEDURE sp_ValidarLogin
+    @nombre_usuario VARCHAR(50),
+    @contraseña VARCHAR(100)
+AS
+BEGIN
+    -- Variables para el resultado
+    DECLARE @usuario_id INT
+    DECLARE @nombre VARCHAR(100)
+    DECLARE @correo VARCHAR(100)
+    DECLARE @rol VARCHAR(50)
+    DECLARE @estado VARCHAR(50)
+    DECLARE @mensaje VARCHAR(200)
+
+    -- Buscar el usuario con las credenciales proporcionadas
+    SELECT
+        @usuario_id = u.usuario_id,
+        @nombre = u.nombre,
+        @correo = u.correo,
+        @rol = r.rol,
+        @estado = u.estado
+    FROM Usuario u
+    INNER JOIN Rol r ON u.rol_id = r.rol_id
+    WHERE u.nombre_usuario = @nombre_usuario
+    AND u.contraseña = @contraseña
+
+    -- Verificar el resultado
+    IF @usuario_id IS NOT NULL
+    BEGIN
+        -- Verificar si el usuario está activo
+        IF @estado = 'activo'
+        BEGIN
+            -- Login exitoso
+            SET @mensaje = 'Login exitoso'
+            SELECT
+                1 as login_exitoso,
+                @usuario_id as usuario_id,
+                @nombre as nombre,
+                @correo as correo,
+                @rol as rol,
+                @estado as estado,
+                @mensaje as mensaje
+        END
+        ELSE
+        BEGIN
+            -- Usuario inactivo
+            SET @mensaje = 'Usuario inactivo'
+            SELECT
+                0 as login_exitoso,
+                NULL as usuario_id,
+                NULL as nombre,
+                NULL as correo,
+                NULL as rol,
+                @estado as estado,
+                @mensaje as mensaje
+        END
+    END
+    ELSE
+    BEGIN
+        -- Credenciales incorrectas
+        SET @mensaje = 'Usuario o contraseña incorrectos'
+        SELECT
+            0 as login_exitoso,
+            NULL as usuario_id,
+            NULL as nombre,
+            NULL as correo,
+            NULL as rol,
+            NULL as estado,
+            @mensaje as mensaje
+    END
+END

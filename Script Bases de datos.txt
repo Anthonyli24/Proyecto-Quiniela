@@ -1,0 +1,240 @@
+CREATE DATABASE QUINIELA;
+USE QUINIELA;
+
+CREATE TABLE Torneo (
+    torneo_id INT NOT NULL PRIMARY KEY,
+    fecha_inicio DATE NOT NULL,
+    fecha_cierre DATE NOT NULL,
+    resultado_final VARCHAR(255) 
+);
+
+CREATE TABLE Equipo (
+    equipo_id INT NOT NULL PRIMARY KEY,
+    nombre_equipo VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Torneo_Equipo (
+    torneo_id INT NOT NULL,
+    equipo_id INT NOT NULL,
+    PRIMARY KEY (torneo_id, equipo_id),
+    FOREIGN KEY (torneo_id) REFERENCES Torneo(torneo_id),
+    FOREIGN KEY (equipo_id) REFERENCES Equipo(equipo_id)
+);
+
+CREATE TABLE Partido (
+    partido_id INT NOT NULL PRIMARY KEY,
+    estado_partido VARCHAR(50) NOT NULL,
+    goles_visitante INT NOT NULL,
+    goles_local INT NOT NULL,
+    fecha_partido DATE NOT NULL,
+    hora_partido TIME NOT NULL,
+    equipo_local INT NOT NULL,
+    equipo_visitante INT NOT NULL,
+    torneo_id INT NOT NULL,
+    FOREIGN KEY (equipo_local) REFERENCES Equipo(equipo_id),
+    FOREIGN KEY (equipo_visitante) REFERENCES Equipo(equipo_id),
+    FOREIGN KEY (torneo_id) REFERENCES Torneo(torneo_id)
+);
+
+CREATE TABLE Rol (
+    rol_id INT NOT NULL PRIMARY KEY,
+    rol VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Usuario (
+    usuario_id INT NOT NULL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL,
+    nombre_usuario VARCHAR(50) NOT NULL,
+    contraseña VARCHAR(100) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    rol_id INT NOT NULL,
+    FOREIGN KEY (rol_id) REFERENCES Rol(rol_Id)
+);
+
+CREATE TABLE Quiniela (
+    quiniela_id INT NOT NULL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    descripcion TEXT,
+    reglas TEXT,
+    fecha_inicio_inscripciones DATE NOT NULL,
+    fecha_final_inscripciones DATE NOT NULL,
+    estado VARCHAR(50) NOT NULL,
+    modalidad VARCHAR(50) NOT NULL,
+    tipo_puntuacion VARCHAR(50) NOT NULL,
+    torneo_id INT NOT NULL,
+    FOREIGN KEY (torneo_id) REFERENCES Torneo(torneo_id)
+);
+
+CREATE TABLE Inscripcion (
+    inscripcion_Id INT NOT NULL PRIMARY KEY,
+    quiniela_id INT NOT NULL,
+    usuario_id INT NOT NULL,
+    puntaje INT NOT NULL,
+    FOREIGN KEY (quiniela_id) REFERENCES Quiniela(quiniela_id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id)
+);
+
+CREATE TABLE Pronostico (
+    pronostico_id INT NOT NULL PRIMARY KEY,
+    usuario_id INT NOT NULL,
+    goles_visita INT NOT NULL,
+    goles_local INT NOT NULL,
+    fecha_pronostico DATE NOT NULL,
+    hora_pronostico TIME NOT NULL,
+    partido_id INT NOT NULL,
+    quiniela_id INT NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id),
+    FOREIGN KEY (partido_id) REFERENCES Partido(partido_id),
+    FOREIGN KEY (quiniela_id) REFERENCES Quiniela(quiniela_id),
+    UNIQUE (usuario_id, partido_id, quiniela_id)
+);
+
+CREATE TABLE Partido_Quiniela (
+    partido_id INT NOT NULL,
+    quiniela_id INT NOT NULL,
+    PRIMARY KEY (partido_id, quiniela_id),
+    FOREIGN KEY (partido_id) REFERENCES Partido(partido_id),
+    FOREIGN KEY (quiniela_id) REFERENCES Quiniela(quiniela_id)
+);
+
+CREATE TABLE Premio (
+    premio_id INT NOT NULL PRIMARY KEY,
+    nombre_premio VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Premio_Quiniela (
+    quiniela_id INT NOT NULL,
+    premio_id INT NOT NULL,
+    PRIMARY KEY (quiniela_id, premio_id),
+    FOREIGN KEY (quiniela_id) REFERENCES Quiniela(quiniela_id),
+    FOREIGN KEY (premio_id) REFERENCES Premio(premio_id)
+);
+
+CREATE TABLE Premio_Usuario (
+    usuario_id INT NOT NULL,
+    premio_id INT NOT NULL,
+    PRIMARY KEY (usuario_id, premio_id),
+    FOREIGN KEY (usuario_id) REFERENCES Usuario(usuario_id),
+    FOREIGN KEY (premio_id) REFERENCES Premio(premio_id)
+);
+
+INSERT INTO Torneo (torneo_id, fecha_inicio, fecha_cierre, resultado_final)
+VALUES (1, '2024-09-17', '2025-05-31', NULL);
+
+INSERT INTO Equipo (equipo_id, nombre_equipo) VALUES
+(1, 'Paris Saint-Germain'),
+(2, 'Liverpool'),
+(3, 'Club Brugge'),
+(4, 'Aston Villa'),
+(5, 'Real Madrid'),
+(6, 'Atlético de Madrid'),
+(7, 'PSV Eindhoven'),
+(8, 'Arsenal'),
+(9, 'Benfica'),
+(10, 'FC Barcelona'),
+(11, 'Borussia Dortmund'),
+(12, 'Lille'),
+(13, 'Bayern München'),
+(14, 'Bayer Leverkusen'),
+(15, 'Feyenoord'),
+(16, 'Inter de Milán');
+
+INSERT INTO Torneo_Equipo (torneo_id, equipo_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(1, 11),
+(1, 12),
+(1, 13),
+(1, 14),
+(1, 15),
+(1, 16);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (1, 'Finalizado', 2, 1, '2025-03-04', '21:00:00', 1, 2, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (2, 'Finalizado', 1, 2, '2025-03-04', '21:00:00', 3, 4, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (3, 'Finalizado', 1, 1, '2025-03-04', '21:00:00', 5, 6, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (4, 'Finalizado', 0, 2, '2025-03-04', '21:00:00', 7, 8, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (5, 'Finalizado', 1, 3, '2025-03-05', '21:00:00', 9, 10, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (6, 'Finalizado', 2, 2, '2025-03-05', '21:00:00', 11, 12, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (7, 'Finalizado', 1, 1, '2025-03-05', '21:00:00', 13, 14, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (8, 'Finalizado', 0, 2, '2025-03-05', '21:00:00', 15, 16, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (9, 'Finalizado', 1, 2, '2025-04-08', '21:00:00', 1, 4, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (10, 'Finalizado', 2, 1, '2025-04-08', '21:00:00', 8, 5, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (11, 'Finalizado', 1, 2, '2025-04-09', '21:00:00', 10, 11, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (12, 'Finalizado', 2, 2, '2025-04-09', '21:00:00', 13, 16, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (13, 'Finalizado', 1, 2, '2025-04-29', '21:00:00', 4, 8, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES (14, 'Finalizado', 1, 3, '2025-04-30', '21:00:00', 11, 16, 1);
+
+INSERT INTO Partido (partido_id, estado_partido, goles_visitante, goles_local, fecha_partido, hora_partido, equipo_local, equipo_visitante, torneo_id)
+VALUES
+(29, 'Pendiente', 0, 1, '2025-05-31', '21:00:00', 1, 2, 1);
+
+INSERT INTO Quiniela (quiniela_id, nombre, descripcion, reglas, fecha_inicio_inscripciones, fecha_final_inscripciones, estado, modalidad, tipo_puntuacion, torneo_id)
+VALUES (1, 'Quiniela Champions 2024/25', 'Quiniela de la UEFA Champions League 2024/25', 'Reglas estándar de puntuación', '2024-09-01', '2024-09-16', 'Activa', 'Pública', 'Puntos por acierto', 1);
+
+INSERT INTO Partido_Quiniela (partido_id, quiniela_id) VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 1),
+(5, 1),
+(6, 1),
+(7, 1),
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1),
+(13, 1),
+(14, 1);
+
+INSERT INTO Premio (premio_id, nombre_premio) VALUES
+(1, 'Balón de Oro réplica');
+
+INSERT INTO Premio_Quiniela (quiniela_id, premio_id) VALUES
+(1, 1);
+
+INSERT INTO Rol (rol_id, rol) VALUES
+(1, 'Administrador'),
+(2, 'Jugador');
+
+INSERT INTO Usuario (usuario_id, nombre, correo, nombre_usuario, contraseña, fecha_nacimiento, estado, rol_id) VALUES
+(1, 'Carlos Vargas', 'carlos@example.com', 'cvargas', 'segura123', '1990-04-15', 'activo', 2),
+(2, 'María Gómez', 'maria@example.com', 'mgomez', 'clave456', '1995-06-22', 'activo', 2),
+(3, 'Admin', 'admin@quiniela.com', 'admin', 'adminpass', '1985-01-01', 'activo', 1);

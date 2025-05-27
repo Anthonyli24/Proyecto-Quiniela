@@ -1,0 +1,28 @@
+--Pruebas para login
+
+
+-- Login exitoso
+Go
+EXEC sp_ValidarLogin 'cvargas', 'segura123'
+
+-- Login con admin
+EXEC sp_ValidarLogin 'admin', 'adminpass'
+
+-- Login fallido
+EXEC sp_ValidarLogin 'usuario_malo', 'clave_mala'
+
+
+
+
+
+--Pruebas para registro
+
+
+EXEC RegistrarUsuario
+    @nombre = 'Anthony Pérez',
+    @correo = 'anthony.perez@example.com',
+    @nombre_usuario = 'Anthonyp',
+    @contraseña = '12345',
+    @fecha_nacimiento = '1990-01-01',
+    @estado = 'Activo',
+    @rol_id = 2;

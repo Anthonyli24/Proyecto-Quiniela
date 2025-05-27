@@ -69,3 +69,53 @@ BEGIN
             @mensaje as mensaje
     END
 END
+
+
+
+
+
+
+
+--Procedimiento para registrar un usuario
+
+
+
+CREATE PROCEDURE RegistrarUsuario
+    @nombre VARCHAR(100),
+    @correo VARCHAR(100),
+    @nombre_usuario VARCHAR(50),
+    @contraseña VARCHAR(100),
+    @fecha_nacimiento DATE,
+    @estado VARCHAR(50),
+    @rol_id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        -- Validar si ya existe el nombre de usuario o el correo
+        IF EXISTS (SELECT 1 FROM Usuario WHERE nombre_usuario = @nombre_usuario OR correo = @correo)
+        BEGIN
+            THROW 50001, 'El nombre de usuario o correo ya están registrados.', 1;
+        END
+
+        -- Insertar el nuevo usuario
+        INSERT INTO Usuario (nombre, correo, nombre_usuario, contraseña, fecha_nacimiento, estado, rol_id)
+        VALUES (@nombre, @correo, @nombre_usuario, @contraseña, @fecha_nacimiento, @estado, @rol_id);
+
+        PRINT 'Usuario registrado exitosamente.';
+    END TRY
+    BEGIN CATCH
+        -- Manejo del error
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+
+        SELECT
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+
+        RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END;

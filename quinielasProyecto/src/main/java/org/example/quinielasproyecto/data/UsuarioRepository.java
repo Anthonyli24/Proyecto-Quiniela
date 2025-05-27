@@ -3,6 +3,7 @@ package org.example.quinielasproyecto.data;
 
 import jakarta.persistence.*;
 import org.example.quinielasproyecto.logic.dto.LoginResponse;
+import org.example.quinielasproyecto.logic.dto.RegistroRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -50,4 +51,42 @@ public class UsuarioRepository {
         response.setMensaje("Usuario o contraseña incorrectos");
         return response;
     }
+
+
+
+
+
+
+    public String registrarUsuario(RegistroRequest request) {
+        try {
+            StoredProcedureQuery query = entityManager.createStoredProcedureQuery("RegistrarUsuario");
+
+            query.registerStoredProcedureParameter("nombre", String.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter("correo", String.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter("nombre_usuario", String.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter("contraseña", String.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter("fecha_nacimiento", java.sql.Date.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter("estado", String.class, ParameterMode.IN);
+            query.registerStoredProcedureParameter("rol_id", Integer.class, ParameterMode.IN);
+
+            query.setParameter("nombre", request.getNombre());
+            query.setParameter("correo", request.getCorreo());
+            query.setParameter("nombre_usuario", request.getNombreUsuario());
+            query.setParameter("contraseña", request.getContraseña());
+            query.setParameter("fecha_nacimiento", java.sql.Date.valueOf(request.getFechaNacimiento()));
+            query.setParameter("estado", request.getEstado());
+            query.setParameter("rol_id", request.getRolId());
+
+            query.execute();
+            return "Usuario registrado exitosamente.";
+        } catch (Exception e) {
+            return "Error en el registro: " + e.getMessage();
+        }
+    }
+
+
+
+
+
+
 }

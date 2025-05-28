@@ -22,8 +22,14 @@ loginForm.addEventListener("submit", async function (e) {
         const data = await response.json();
 
         if (data.loginExitoso) {
-            window.location.href = "/dashboard.html"; // Cambia esto por tu vista principal
-        } else {
+            if (data.rol === "Administrador") {
+                window.location.href = "/admin-dashboard.html";
+            } else if (data.rol === "Jugador") {
+                window.location.href = "/jugador-dashboard.html";
+            } else {
+                window.location.href = "/dashboard.html"; // Por si hay otros roles
+            }
+        }else {
             errorMsg.style.display = "block";
             errorMsg.textContent = data.mensaje || "Credenciales inválidas";
         }

@@ -1,3 +1,6 @@
+--    // LOGIN Y REGISTRO \\
+
+
 -- Procedimiento para validar login de usuario
 CREATE PROCEDURE sp_ValidarLogin
     @nombre_usuario VARCHAR(50),
@@ -119,3 +122,129 @@ BEGIN
         RAISERROR(@ErrorMessage, @ErrorSeverity, @ErrorState);
     END CATCH
 END;
+
+
+
+
+
+
+
+--    // PROCEDIMIENTOS Y FUNCIONES ESPECIFICAS PARA  ADMINISTRADOR \\
+
+
+
+-- Funcion para obtener los partidos
+
+CREATE FUNCTION fn_ObtenerPartidos()
+RETURNS TABLE
+AS
+RETURN
+(
+    SELECT * FROM Partido
+);
+
+
+
+
+
+
+--Procedimiento para Insertar partidos
+
+CREATE PROCEDURE sp_InsertarPartido
+           @FechaPartido DATE,
+           @HoraPartido TIME,
+           @EquipoLocal INT,
+           @EquipoVisitante INT,
+           @TorneoID INT
+       AS
+       BEGIN
+           SET NOCOUNT ON;
+
+           -- Validación 1: Fecha del partido no puede ser en el pasado
+           IF @FechaPartido < CAST(GETDATE() AS DATE)
+           BEGIN
+               THROW 50001, 'La fecha del partido no puede estar en el pasado.', 1;
+               RETURN;
+           END
+
+           -- Validación 2: Hora del partido no puede ser NULL
+           IF @HoraPartido IS NULL
+           BEGIN
+               THROW 50002, 'La hora del partido es obligatoria.', 1;
+               RETURN;
+           END
+
+           -- Validación 3: No se permiten equipos iguales
+           IF @EquipoLocal = @EquipoVisitante
+           BEGIN
+               THROW 50003, 'El equipo local y visitante no pueden ser el mismo.', 1;
+               RETURN;
+           END
+
+           -- Validación 4: Verificar que el torneo exista
+           IF NOT EXISTS (SELECT 1 FROM Torneo WHERE torneo_id = @TorneoID)
+           BEGIN
+               THROW 50004, 'El torneo especificado no existe.', 1;
+               RETURN;
+           END
+
+           -- Validación 5: Verificar que ambos equipos existan
+           IF NOT EXISTS (SELECT 1 FROM Equipo WHERE equipo_id = @EquipoLocal)
+           BEGIN
+               THROW 50005, 'El equipo local no existe.', 1;
+               RETURN;
+           END
+
+           IF NOT EXISTS (SELECT 1 FROM Equipo WHERE equipo_id = @EquipoVisitante)
+           BEGIN
+               THROW 50006, 'El equipo visitante no existe.', 1;
+               RETURN;
+           END
+
+           -- Validación 6: El equipo local no debe tener otro partido ese día
+           IF EXISTS (
+               SELECT 1 FROM Partido
+               WHERE fecha_partido = @FechaPartido
+                 AND (equipo_local = @EquipoLocal OR equipo_visitante = @EquipoLocal)
+           )
+           BEGIN
+               THROW 50007, 'El equipo local ya tiene un partido programado ese día.', 1;
+               RETURN;
+           END
+
+           -- Validación 7: El equipo visitante no debe tener otro partido ese día
+           IF EXISTS (
+               SELECT 1 FROM Partido
+               WHERE fecha_partido = @FechaPartido
+                 AND (equipo_local = @EquipoVisitante OR equipo_visitante = @EquipoVisitante)
+           )
+           BEGIN
+               THROW 50008, 'El equipo visitante ya tiene un partido programado ese día.', 1;
+               RETURN;
+           END
+
+           -- Inserción del partido
+           INSERT INTO Partido (
+               estado_partido,
+               goles_visitante,
+               goles_local,
+               fecha_partido,
+               hora_partido,
+               equipo_local,
+               equipo_visitante,
+               torneo_id
+           )
+           VALUES (
+               'Pendiente',
+               0,
+               0,
+               @FechaPartido,
+               @HoraPartido,
+               @EquipoLocal,
+               @EquipoVisitante,
+               @TorneoID
+           );
+       END;
+
+
+

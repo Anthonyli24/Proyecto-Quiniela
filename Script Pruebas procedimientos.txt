@@ -64,4 +64,17 @@ EXEC sp_InsertarPartido
 
 
 
---
+--Ejecutra ResgistrarQuiniela
+
+
+EXEC sp_RegistrarQuiniela
+    @QuinielaID = 1000,
+    @Nombre = 'Champions League 2025',
+    @Descripcion = 'Quiniela para predecir los resultados del torneo.',
+    @Reglas = '3 puntos por resultado exacto, 1 punto por acertar ganador.',
+    @FechaInicioInscripciones = '2025-06-30',
+    @FechaFinalInscripciones = '2025-07-12',
+    @Estado = 'Abierta',
+    @Modalidad = 'Individual',
+    @TipoPuntuacion = 'Por resultado',
+    @TorneoID = 1;

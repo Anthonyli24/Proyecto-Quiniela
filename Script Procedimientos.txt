@@ -248,3 +248,95 @@ CREATE PROCEDURE sp_InsertarPartido
 
 
 
+
+
+
+
+
+CREATE  PROCEDURE sp_RegistrarQuiniela
+    @QuinielaID INT,
+    @Nombre VARCHAR(100),
+    @Descripcion TEXT,
+    @Reglas TEXT,
+    @FechaInicioInscripciones DATE,
+    @FechaFinalInscripciones DATE,
+    @Estado VARCHAR(50),
+    @Modalidad VARCHAR(50),
+    @TipoPuntuacion VARCHAR(50),
+    @TorneoID INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        -- Validar que el torneo exista
+        IF NOT EXISTS (SELECT 1 FROM Torneo WHERE torneo_id = @TorneoID)
+        BEGIN
+            THROW 60001, 'El torneo especificado no existe.', 1;
+        END
+
+        -- Validar que las fechas no sean anteriores a hoy
+        IF @FechaInicioInscripciones < CAST(GETDATE() AS DATE)
+        BEGIN
+            THROW 60002, 'La fecha de inicio de inscripciones no puede ser anterior a la fecha actual.', 1;
+        END
+
+        IF @FechaFinalInscripciones < CAST(GETDATE() AS DATE)
+        BEGIN
+            THROW 60003, 'La fecha final de inscripciones no puede ser anterior a la fecha actual.', 1;
+        END
+
+        -- Validar que la fecha inicio sea menor o igual que la fecha final
+        IF @FechaInicioInscripciones > @FechaFinalInscripciones
+        BEGIN
+            THROW 60004, 'La fecha de inicio de inscripciones no puede ser posterior a la fecha final.', 1;
+        END
+
+        -- Validar que la fecha final de inscripción esté dentro del rango del torneo
+        DECLARE @FechaCierreTorneo DATE;
+        SELECT @FechaCierreTorneo = fecha_cierre FROM Torneo WHERE torneo_id = @TorneoID;
+
+        IF @FechaFinalInscripciones > @FechaCierreTorneo
+        BEGIN
+            THROW 60005, 'La fecha final de inscripciones no puede ser posterior a la fecha de cierre del torneo.', 1;
+        END
+
+        -- Verificar que el ID de quiniela no exista ya
+        IF EXISTS (SELECT 1 FROM Quiniela WHERE quiniela_id = @QuinielaID)
+        BEGIN
+            THROW 60006, 'Ya existe una quiniela con el ID proporcionado.', 1;
+        END
+
+        -- Insertar quiniela
+        INSERT INTO Quiniela (
+            quiniela_id,
+            nombre,
+            descripcion,
+            reglas,
+            fecha_inicio_inscripciones,
+            fecha_final_inscripciones,
+            estado,
+            modalidad,
+            tipo_puntuacion,
+            torneo_id
+        )
+        VALUES (
+            @QuinielaID,
+            @Nombre,
+            @Descripcion,
+            @Reglas,
+            @FechaInicioInscripciones,
+            @FechaFinalInscripciones,
+            @Estado,
+            @Modalidad,
+            @TipoPuntuacion,
+            @TorneoID
+        );
+
+    END TRY
+    BEGIN CATCH
+        -- Manejo de errores
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        THROW 70000, @ErrorMessage, 1;
+    END CATCH
+END;

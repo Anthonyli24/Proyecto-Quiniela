@@ -26,3 +26,42 @@ EXEC RegistrarUsuario
     @fecha_nacimiento = '1990-01-01',
     @estado = 'Activo',
     @rol_id = 2;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-- Pruebas para funciones y procedimientos del administrador
+
+
+-- Ejecutar la funcion obtener partidos
+SELECT * FROM fn_ObtenerPartidos();
+
+
+
+
+--Ejecutar InsertarPartido
+
+EXEC sp_InsertarPartido
+         @FechaPartido = '2025-03-05',
+         @HoraPartido = '21:00:00',
+         @EquipoLocal = 15,
+         @EquipoVisitante = 16,
+         @TorneoID = 1;
+
+
+
+
+
+--

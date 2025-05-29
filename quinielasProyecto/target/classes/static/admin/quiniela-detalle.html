@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Detalle de Quiniela – Quinielas Deportivas</title>
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+<header>
+    <nav id="navbar" class="navbar"></nav>
+</header>
+
+<main class="container">
+    <button id="btnBack" class="btn btn-secondary">
+        ← Volver a Quinielas
+    </button>
+
+    <div id="quiniela-detail" class="detail-card">
+        <!-- Aquí se mostrará la información de la quiniela -->
+    </div>
+
+    <h2>Partidos</h2>
+    <table id="partidos-table" class="detail-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Local</th>
+            <th>Visitante</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Goles Local</th>
+            <th>Goles Visitante</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Aquí se inyectan las filas de partidos -->
+        </tbody>
+    </table>
+</main>
+
+<script src="../js/admin.js"></script>
+<script src="../js/quiniela-detalle.js"></script>
+</body>
+</html>

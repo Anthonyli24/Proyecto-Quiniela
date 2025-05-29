@@ -3,7 +3,7 @@ package org.example.quinielasproyecto.logic.dto;
 import java.time.LocalDate;
 
 public class QuinielaRequest {
-    private int quinielaId;
+
     private String nombre;
     private String descripcion;
     private String reglas;
@@ -15,8 +15,6 @@ public class QuinielaRequest {
     private int torneoId;
 
     // Getters y setters
-    public int getQuinielaId() { return quinielaId; }
-    public void setQuinielaId(int quinielaId) { this.quinielaId = quinielaId; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Crear Quiniela - Quinielas Deportivas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="css/registro.css" />
+</head>
+<body>
+<div class="container">
+    <h2>Crear Quiniela</h2>
+    <form id="quinielaForm">
+
+        <div class="form-group">
+            <label for="nombre">Nombre de la quiniela</label>
+            <input type="text" id="nombre" name="nombre" required />
+        </div>
+
+        <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" name="descripcion" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="reglas">Reglas</label>
+            <textarea id="reglas" name="reglas" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="fechaInicioInscripciones">Fecha inicio de inscripciones</label>
+            <input type="date" id="fechaInicioInscripciones" name="fechaInicioInscripciones" required />
+        </div>
+
+        <div class="form-group">
+            <label for="fechaFinalInscripciones">Fecha final de inscripciones</label>
+            <input type="date" id="fechaFinalInscripciones" name="fechaFinalInscripciones" required />
+        </div>
+
+        <div class="form-group">
+            <label for="estado">Estado</label>
+            <select id="estado" name="estado" required>
+                <option value="Activa" selected>Activa</option>
+                <option value="Inactiva">Inactiva</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="modalidad">Modalidad</label>
+            <select id="modalidad" name="modalidad" required>
+                <option value="Individual" selected>Individual</option>
+                <option value="Grupal">Grupal</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="tipoPuntuacion">Tipo de puntuación</label>
+            <select id="tipoPuntuacion" name="tipoPuntuacion" required>
+                <option value="Exacto">Exacto</option>
+                <option value="Resultado">Resultado</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="torneoId">Torneo</label>
+            <input type="number" id="torneoId" name="torneoId" required />
+        </div>
+
+        <button type="submit">Registrar Quiniela</button>
+
+    </form>
+    <div class="mensaje" id="mensaje"></div>
+</div>
+
+<script src="js/crear_quiniela.js"></script>
+</body>
+</html>

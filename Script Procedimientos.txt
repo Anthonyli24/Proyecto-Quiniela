@@ -253,8 +253,7 @@ CREATE PROCEDURE sp_InsertarPartido
 
 
 
-CREATE  PROCEDURE sp_RegistrarQuiniela
-    @QuinielaID INT,
+CREATE PROCEDURE sp_RegistrarQuiniela
     @Nombre VARCHAR(100),
     @Descripcion TEXT,
     @Reglas TEXT,
@@ -301,15 +300,8 @@ BEGIN
             THROW 60005, 'La fecha final de inscripciones no puede ser posterior a la fecha de cierre del torneo.', 1;
         END
 
-        -- Verificar que el ID de quiniela no exista ya
-        IF EXISTS (SELECT 1 FROM Quiniela WHERE quiniela_id = @QuinielaID)
-        BEGIN
-            THROW 60006, 'Ya existe una quiniela con el ID proporcionado.', 1;
-        END
-
         -- Insertar quiniela
         INSERT INTO Quiniela (
-            quiniela_id,
             nombre,
             descripcion,
             reglas,
@@ -321,7 +313,6 @@ BEGIN
             torneo_id
         )
         VALUES (
-            @QuinielaID,
             @Nombre,
             @Descripcion,
             @Reglas,
@@ -335,11 +326,23 @@ BEGIN
 
     END TRY
     BEGIN CATCH
-        -- Manejo de errores
         DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
         THROW 70000, @ErrorMessage, 1;
     END CATCH
 END;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 -- =============================================================================
 -- PROCEDIMIENTO: usp_get_quinielas_ordenadas

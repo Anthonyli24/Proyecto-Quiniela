@@ -22,7 +22,7 @@ public class QuinielaRepository {
         StoredProcedureQuery query = entityManager
                 .createStoredProcedureQuery("sp_RegistrarQuiniela");
 
-        query.registerStoredProcedureParameter("QuinielaID", Integer.class, ParameterMode.IN);
+
         query.registerStoredProcedureParameter("Nombre", String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("Descripcion", String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("Reglas", String.class, ParameterMode.IN);
@@ -33,7 +33,7 @@ public class QuinielaRepository {
         query.registerStoredProcedureParameter("TipoPuntuacion", String.class, ParameterMode.IN);
         query.registerStoredProcedureParameter("TorneoID", Integer.class, ParameterMode.IN);
 
-        query.setParameter("QuinielaID", request.getQuinielaId());
+
         query.setParameter("Nombre", request.getNombre());
         query.setParameter("Descripcion", request.getDescripcion());
         query.setParameter("Reglas", request.getReglas());

@@ -1,6 +1,4 @@
 package org.example.quinielasproyecto.data;
-
-
 import jakarta.persistence.*;
 import org.example.quinielasproyecto.logic.dto.LoginResponse;
 import org.example.quinielasproyecto.logic.dto.RegistroRequest;
@@ -51,11 +49,6 @@ public class UsuarioRepository {
         response.setMensaje("Usuario o contraseña incorrectos");
         return response;
     }
-
-
-
-
-
 
     public String registrarUsuario(RegistroRequest request) {
         try {

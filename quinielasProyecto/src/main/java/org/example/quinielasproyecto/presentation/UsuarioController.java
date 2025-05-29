@@ -28,14 +28,6 @@ public class UsuarioController {
         LoginResponse response = usuarioService.login(loginRequest.getNombreUsuario(), loginRequest.getContraseña());
 
         if (response.isLoginExitoso()) {
-            // Guardar datos necesarios en la sesión
-            session.setAttribute("usuarioId", response.getUsuarioId());
-            session.setAttribute("nombreUsuario", loginRequest.getNombreUsuario());
-            session.setAttribute("rol", response.getRol());
-        }
-
-
-        if (response.isLoginExitoso()) {
             session.setAttribute("usuarioId", response.getUsuarioId());
             session.setAttribute("nombreUsuario", loginRequest.getNombreUsuario());
             session.setAttribute("rol", response.getRol());

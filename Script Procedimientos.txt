@@ -340,3 +340,103 @@ BEGIN
         THROW 70000, @ErrorMessage, 1;
     END CATCH
 END;
+
+-- =============================================================================
+-- PROCEDIMIENTO: usp_get_quinielas_ordenadas
+-- Descripción: Devuelve todas las quinielas ordenadas
+--   1) Primero por estado: Abierta → 0, Cerrada → 1, Finalizada → 2, otros → 3
+--   2) Luego por fecha de inicio de inscripciones (más reciente primero)
+-- =============================================================================
+GO
+CREATE OR ALTER PROCEDURE usp_get_quinielas_ordenadas
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        q.quiniela_id,
+        q.nombre,
+        q.descripcion,
+        q.reglas,
+        q.fecha_inicio_inscripciones,
+        q.fecha_final_inscripciones,
+        q.estado,
+        q.modalidad,
+        q.tipo_puntuacion,
+        q.torneo_id
+    FROM Quiniela AS q
+    ORDER BY
+      CASE q.estado
+        WHEN 'Abierta'    THEN 0
+        WHEN 'Cerrada'    THEN 1
+        WHEN 'Finalizada' THEN 2
+        ELSE 3
+      END,
+      q.fecha_inicio_inscripciones DESC;
+END
+GO
+
+-- =============================================================================
+-- PROCEDIMIENTO: usp_get_quiniela_con_partidos
+-- Descripción : Devuelve los datos de una quiniela y sus partidos;
+--               lanza error si la quiniela no existe
+-- Parámetros  : @quiniela_id INT → clave primaria de la quiniela
+-- ResultSet 1: Datos de la quiniela
+-- ResultSet 2: Partidos pertenecientes a esa quiniela
+-- =============================================================================
+CREATE PROCEDURE usp_get_quiniela_con_partidos
+    @quiniela_id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    --------------------------------------------------
+    -- 0) Validar existencia de la quiniela
+    --------------------------------------------------
+    IF NOT EXISTS (
+        SELECT 1
+          FROM Quiniela
+         WHERE quiniela_id = @quiniela_id
+    )
+    BEGIN
+        DECLARE @mensaje NVARCHAR(200);
+        SET @mensaje = N'Quiniela con id '
+                     + CAST(@quiniela_id AS NVARCHAR(10))
+                     + N' no encontrada.';
+        THROW 50001, @mensaje, 1;
+    END
+
+    --------------------------------------------------
+    -- 1) Datos de la quiniela
+    --------------------------------------------------
+    SELECT
+        q.quiniela_id,
+        q.nombre,
+        q.descripcion,
+        q.reglas,
+        q.fecha_inicio_inscripciones,
+        q.fecha_final_inscripciones,
+        q.estado,
+        q.modalidad,
+        q.tipo_puntuacion,
+        q.torneo_id
+    FROM Quiniela AS q
+    WHERE q.quiniela_id = @quiniela_id;
+
+    --------------------------------------------------
+    -- 2) Partidos asociados a la quiniela
+    --------------------------------------------------
+    SELECT
+        p.partido_id,
+        p.estado_partido,
+        p.fecha_partido,
+        p.hora_partido,
+        p.goles_local,
+        p.goles_visitante
+    FROM Partido AS p
+    INNER JOIN Partido_Quiniela AS pq
+        ON p.partido_id = pq.partido_id
+    WHERE pq.quiniela_id = @quiniela_id
+    ORDER BY p.fecha_partido, p.hora_partido;
+END
+GO

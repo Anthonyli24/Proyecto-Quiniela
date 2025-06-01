@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1) Construye la navbar con enlaces definidos aquí
     const links = [
         { label: 'Dashboard',       href: '/admin-dashboard.html' },
         { label: 'Quinielas',       href: '/admin/quinielas.html' },
@@ -25,14 +24,12 @@ document.addEventListener('DOMContentLoaded', () => {
         nav.appendChild(a);
     });
 
-    // 2) Obtiene el perfil para saludar al usuario
     fetch('/api/usuarios/perfil', { credentials: 'include' })
         .then(res => {
             if (!res.ok) throw new Error('No autorizado');
             return res.json();
         })
         .then(data => {
-            // Nota: asegúrate de que LoginResponse incluya un campo nombreUsuario
             const nombre = data.nombreUsuario || 'Administrador';
             document.getElementById('welcome-message')
                 .textContent = `Bienvenido, ${nombre}!`;

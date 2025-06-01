@@ -6,6 +6,8 @@ import java.time.LocalTime;
 public class PartidoResponse {
 
     private int partidoId;
+    private String equipoLocal;
+    private String equipoVisitante;
     private String estadoPartido;
     private LocalDate fechaPartido;
     private LocalTime horaPartido;
@@ -16,12 +18,16 @@ public class PartidoResponse {
     }
 
     public PartidoResponse(int partidoId,
+                           String equipoLocal,
+                           String equipoVisitante,
                            String estadoPartido,
                            LocalDate fechaPartido,
                            LocalTime horaPartido,
                            int golesLocal,
                            int golesVisitante) {
         this.partidoId = partidoId;
+        this.equipoLocal = equipoLocal;
+        this.equipoVisitante = equipoVisitante;
         this.estadoPartido = estadoPartido;
         this.fechaPartido = fechaPartido;
         this.horaPartido = horaPartido;
@@ -36,6 +42,14 @@ public class PartidoResponse {
     public void setPartidoId(int partidoId) {
         this.partidoId = partidoId;
     }
+
+    public String getEquipoLocal() {return equipoLocal;}
+
+    public void setEquipoLocal(String equipoLocal) { this.equipoLocal = equipoLocal;}
+
+    public String getEquipoVisitante() {return equipoVisitante;}
+
+    public void setEquipoVisitante(String equipoVisitante) { this.equipoVisitante = equipoVisitante;}
 
     public String getEstadoPartido() {
         return estadoPartido;

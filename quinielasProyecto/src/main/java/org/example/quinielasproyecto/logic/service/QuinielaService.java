@@ -75,10 +75,12 @@ public class QuinielaService {
                     .map(cols -> new PartidoResponse(
                             (Integer) cols[0],
                             (String)  cols[1],
-                            ((java.sql.Date) cols[2]).toLocalDate(),
-                            ((java.sql.Time) cols[3]).toLocalTime(),
-                            (Integer) cols[4],
-                            (Integer) cols[5]
+                            (String)  cols[2],
+                            (String)  cols[3],
+                            ((java.sql.Date) cols[4]).toLocalDate(),
+                            ((java.sql.Time) cols[5]).toLocalTime(),
+                            (Integer) cols[6],
+                            (Integer) cols[7]
                     ))
                     .collect(Collectors.toList());
 
@@ -88,11 +90,9 @@ public class QuinielaService {
             Throwable root = ex.getRootCause();
             if (root instanceof SQLServerException
                     && ((SQLServerException) root).getErrorCode() == 50001) {
-                // aquí solo imprimimos un mensaje corto
                 System.out.println(">> quiniela no encontrada: " + root.getMessage());
                 throw new ResourceNotFoundException(root.getMessage());
             }
-            // otro error, lo repropago
             throw ex;
         }
     }

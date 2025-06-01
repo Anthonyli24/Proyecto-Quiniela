@@ -387,8 +387,8 @@ GO
 -- ResultSet 1: Datos de la quiniela
 -- ResultSet 2: Partidos pertenecientes a esa quiniela
 -- =============================================================================
-CREATE PROCEDURE usp_get_quiniela_con_partidos
-    @quiniela_id INT
+CREATE OR ALTER PROCEDURE usp_get_quiniela_con_partidos
+@quiniela_id INT
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -398,16 +398,16 @@ BEGIN
     --------------------------------------------------
     IF NOT EXISTS (
         SELECT 1
-          FROM Quiniela
-         WHERE quiniela_id = @quiniela_id
+        FROM Quiniela
+        WHERE quiniela_id = @quiniela_id
     )
-    BEGIN
-        DECLARE @mensaje NVARCHAR(200);
-        SET @mensaje = N'Quiniela con id '
-                     + CAST(@quiniela_id AS NVARCHAR(10))
-                     + N' no encontrada.';
-        THROW 50001, @mensaje, 1;
-    END
+        BEGIN
+            DECLARE @mensaje NVARCHAR(200);
+            SET @mensaje = N'Quiniela con id '
+                + CAST(@quiniela_id AS NVARCHAR(10))
+                + N' no encontrada.';
+            THROW 50001, @mensaje, 1;
+        END
 
     --------------------------------------------------
     -- 1) Datos de la quiniela
@@ -431,14 +431,17 @@ BEGIN
     --------------------------------------------------
     SELECT
         p.partido_id,
+        el.nombre_equipo AS equipo_local,
+        ev.nombre_equipo AS equipo_visitante,
         p.estado_partido,
         p.fecha_partido,
         p.hora_partido,
         p.goles_local,
         p.goles_visitante
-    FROM Partido AS p
-    INNER JOIN Partido_Quiniela AS pq
-        ON p.partido_id = pq.partido_id
+    FROM Partido p
+             INNER JOIN Partido_Quiniela pq ON p.partido_id = pq.partido_id
+             INNER JOIN Equipo el ON p.equipo_local = el.equipo_id
+             INNER JOIN Equipo ev ON p.equipo_visitante = ev.equipo_id
     WHERE pq.quiniela_id = @quiniela_id
     ORDER BY p.fecha_partido, p.hora_partido;
 END

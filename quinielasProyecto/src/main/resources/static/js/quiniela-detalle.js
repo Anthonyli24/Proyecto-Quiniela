@@ -1,12 +1,10 @@
 // src/main/resources/static/js/quiniela-detalle.js
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1) Botón “Volver” a la lista de quinielas
     document.getElementById('btnBack').addEventListener('click', () => {
         window.location.href = '/admin/quinielas.html';
     });
 
-    // 2) Leer el parámetro “id” de la URL
     const params = new URLSearchParams(window.location.search);
     const id     = params.get('id');
     const detail = document.getElementById('quiniela-detail');
@@ -17,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // 3) Llamar al endpoint REST para obtener detalles
     fetch(`/api/quinielas/${id}/QuinielaDetalles`, {
         credentials: 'include'
     })
@@ -29,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .then(data => {
             const q = data.quiniela;
-            // 4a) Renderizar la sección de datos de la quiniela
             detail.innerHTML = `
         <h1 class="card-title">${q.nombre}</h1>
         <p>${q.descripcion}</p>
@@ -43,8 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <p><strong>Tipo de Puntuación:</strong> ${q.tipoPuntuacion}</p>
       `;
 
-            // 4b) Renderizar la tabla de partidos
-            tbody.innerHTML = ''; // limpiar filas anteriores
+            tbody.innerHTML = '';
             if (Array.isArray(data.partidos) && data.partidos.length > 0) {
                 data.partidos.forEach(p => {
                     const tr = document.createElement('tr');
@@ -71,14 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
             detail.innerHTML = `<p class="error">${err.message}</p>`;
         });
 
-    // --- Helpers ---
     function formatDate(dstr) {
         const d = new Date(dstr);
         return d.toLocaleDateString();
     }
 
     function formatTime(tstr) {
-        // Asume formato "HH:MM:SS"
         return tstr;
     }
 });

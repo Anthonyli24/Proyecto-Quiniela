@@ -1,13 +1,18 @@
---    // LOGIN Y REGISTRO \\
-
-
--- Procedimiento para validar login de usuario
+-- =============================================================================
+-- PROCEDIMIENTO: sp_ValidarLogin
+-- Descripción : Valida las credenciales de un usuario para login.
+--               Devuelve datos del usuario si el login es exitoso,
+--               mensajes apropiados si el usuario está inactivo o si las credenciales son incorrectas.
+-- Parámetros :
+--    @nombre_usuario VARCHAR(50) → nombre de usuario
+--    @contraseña VARCHAR(100) → contraseña en texto plano (se recomienda manejar con hash)
+-- ResultSet : Resultado con indicador de éxito y datos del usuario o mensaje de error
+-- =============================================================================
 CREATE PROCEDURE sp_ValidarLogin
     @nombre_usuario VARCHAR(50),
     @contraseña VARCHAR(100)
 AS
 BEGIN
-    -- Variables para el resultado
     DECLARE @usuario_id INT
     DECLARE @nombre VARCHAR(100)
     DECLARE @correo VARCHAR(100)
@@ -15,7 +20,6 @@ BEGIN
     DECLARE @estado VARCHAR(50)
     DECLARE @mensaje VARCHAR(200)
 
-    -- Buscar el usuario con las credenciales proporcionadas
     SELECT
         @usuario_id = u.usuario_id,
         @nombre = u.nombre,
@@ -27,13 +31,10 @@ BEGIN
     WHERE u.nombre_usuario = @nombre_usuario
     AND u.contraseña = @contraseña
 
-    -- Verificar el resultado
     IF @usuario_id IS NOT NULL
     BEGIN
-        -- Verificar si el usuario está activo
         IF @estado = 'activo'
         BEGIN
-            -- Login exitoso
             SET @mensaje = 'Login exitoso'
             SELECT
                 1 as login_exitoso,
@@ -46,7 +47,6 @@ BEGIN
         END
         ELSE
         BEGIN
-            -- Usuario inactivo
             SET @mensaje = 'Usuario inactivo'
             SELECT
                 0 as login_exitoso,
@@ -60,7 +60,6 @@ BEGIN
     END
     ELSE
     BEGIN
-        -- Credenciales incorrectas
         SET @mensaje = 'Usuario o contraseña incorrectos'
         SELECT
             0 as login_exitoso,
@@ -74,15 +73,19 @@ BEGIN
 END
 
 
-
-
-
-
-
---Procedimiento para registrar un usuario
-
-
-
+-- =============================================================================
+-- PROCEDIMIENTO: RegistrarUsuario
+-- Descripción : Registra un nuevo usuario validando que no exista el nombre_usuario o correo ya registrado.
+-- Parámetros  :
+--    @nombre VARCHAR(100)
+--    @correo VARCHAR(100)
+--    @nombre_usuario VARCHAR(50)
+--    @contraseña VARCHAR(100)
+--    @fecha_nacimiento DATE
+--    @estado VARCHAR(50)
+--    @rol_id INT
+-- Uso : Inserta un nuevo registro en la tabla Usuario si no existe duplicado
+-- =============================================================================
 CREATE PROCEDURE RegistrarUsuario
     @nombre VARCHAR(100),
     @correo VARCHAR(100),
@@ -93,23 +96,18 @@ CREATE PROCEDURE RegistrarUsuario
     @rol_id INT
 AS
 BEGIN
-    SET NOCOUNT ON;
-
     BEGIN TRY
-        -- Validar si ya existe el nombre de usuario o el correo
         IF EXISTS (SELECT 1 FROM Usuario WHERE nombre_usuario = @nombre_usuario OR correo = @correo)
         BEGIN
             THROW 50001, 'El nombre de usuario o correo ya están registrados.', 1;
         END
 
-        -- Insertar el nuevo usuario
         INSERT INTO Usuario (nombre, correo, nombre_usuario, contraseña, fecha_nacimiento, estado, rol_id)
         VALUES (@nombre, @correo, @nombre_usuario, @contraseña, @fecha_nacimiento, @estado, @rol_id);
 
         PRINT 'Usuario registrado exitosamente.';
     END TRY
     BEGIN CATCH
-        -- Manejo del error
         DECLARE @ErrorMessage NVARCHAR(4000);
         DECLARE @ErrorSeverity INT;
         DECLARE @ErrorState INT;
@@ -124,17 +122,11 @@ BEGIN
 END;
 
 
-
-
-
-
-
---    // PROCEDIMIENTOS Y FUNCIONES ESPECIFICAS PARA  ADMINISTRADOR \\
-
-
-
--- Funcion para obtener los partidos
-
+-- =============================================================================
+-- FUNCIÓN: fn_ObtenerPartidos
+-- Descripción : Devuelve todos los registros de la tabla Partido
+-- Resultado : Tabla con todos los partidos
+-- =============================================================================
 CREATE FUNCTION fn_ObtenerPartidos()
 RETURNS TABLE
 AS
@@ -144,12 +136,21 @@ RETURN
 );
 
 
-
-
-
-
---Procedimiento para Insertar partidos
-
+-- =============================================================================
+-- PROCEDIMIENTO: sp_InsertarPartido
+-- Descripción : Inserta un partido validando:
+--              - que la fecha no esté en el pasado
+--              - que la hora no sea nula
+--              - que equipos sean distintos
+--              - existencia del torneo y equipos
+--              - que los equipos no tengan otro partido el mismo día
+-- Parámetros :
+--    @FechaPartido DATE
+--    @HoraPartido TIME
+--    @EquipoLocal INT
+--    @EquipoVisitante INT
+--    @TorneoID INT
+-- =============================================================================
 CREATE PROCEDURE sp_InsertarPartido
            @FechaPartido DATE,
            @HoraPartido TIME,
@@ -158,37 +159,30 @@ CREATE PROCEDURE sp_InsertarPartido
            @TorneoID INT
        AS
        BEGIN
-           SET NOCOUNT ON;
-
-           -- Validación 1: Fecha del partido no puede ser en el pasado
            IF @FechaPartido < CAST(GETDATE() AS DATE)
            BEGIN
                THROW 50001, 'La fecha del partido no puede estar en el pasado.', 1;
                RETURN;
            END
 
-           -- Validación 2: Hora del partido no puede ser NULL
            IF @HoraPartido IS NULL
            BEGIN
                THROW 50002, 'La hora del partido es obligatoria.', 1;
                RETURN;
            END
 
-           -- Validación 3: No se permiten equipos iguales
            IF @EquipoLocal = @EquipoVisitante
            BEGIN
                THROW 50003, 'El equipo local y visitante no pueden ser el mismo.', 1;
                RETURN;
            END
 
-           -- Validación 4: Verificar que el torneo exista
            IF NOT EXISTS (SELECT 1 FROM Torneo WHERE torneo_id = @TorneoID)
            BEGIN
                THROW 50004, 'El torneo especificado no existe.', 1;
                RETURN;
            END
 
-           -- Validación 5: Verificar que ambos equipos existan
            IF NOT EXISTS (SELECT 1 FROM Equipo WHERE equipo_id = @EquipoLocal)
            BEGIN
                THROW 50005, 'El equipo local no existe.', 1;
@@ -201,7 +195,6 @@ CREATE PROCEDURE sp_InsertarPartido
                RETURN;
            END
 
-           -- Validación 6: El equipo local no debe tener otro partido ese día
            IF EXISTS (
                SELECT 1 FROM Partido
                WHERE fecha_partido = @FechaPartido
@@ -212,7 +205,6 @@ CREATE PROCEDURE sp_InsertarPartido
                RETURN;
            END
 
-           -- Validación 7: El equipo visitante no debe tener otro partido ese día
            IF EXISTS (
                SELECT 1 FROM Partido
                WHERE fecha_partido = @FechaPartido
@@ -223,7 +215,6 @@ CREATE PROCEDURE sp_InsertarPartido
                RETURN;
            END
 
-           -- Inserción del partido
            INSERT INTO Partido (
                estado_partido,
                goles_visitante,
@@ -247,12 +238,20 @@ CREATE PROCEDURE sp_InsertarPartido
        END;
 
 
-
-
-
-
-
-
+-- =============================================================================
+-- PROCEDIMIENTO: sp_RegistrarQuiniela
+-- Descripción : Registra una nueva quiniela con validaciones sobre fechas y existencia de torneo.
+-- Parámetros  :
+--    @Nombre VARCHAR(100)
+--    @Descripcion TEXT
+--    @Reglas TEXT
+--    @FechaInicioInscripciones DATE
+--    @FechaFinalInscripciones DATE
+--    @Estado VARCHAR(50)
+--    @Modalidad VARCHAR(50)
+--    @TipoPuntuacion VARCHAR(50)
+--    @TorneoID INT
+-- =============================================================================
 CREATE PROCEDURE sp_RegistrarQuiniela
     @Nombre VARCHAR(100),
     @Descripcion TEXT,
@@ -265,16 +264,12 @@ CREATE PROCEDURE sp_RegistrarQuiniela
     @TorneoID INT
 AS
 BEGIN
-    SET NOCOUNT ON;
-
     BEGIN TRY
-        -- Validar que el torneo exista
         IF NOT EXISTS (SELECT 1 FROM Torneo WHERE torneo_id = @TorneoID)
         BEGIN
             THROW 60001, 'El torneo especificado no existe.', 1;
         END
 
-        -- Validar que las fechas no sean anteriores a hoy
         IF @FechaInicioInscripciones < CAST(GETDATE() AS DATE)
         BEGIN
             THROW 60002, 'La fecha de inicio de inscripciones no puede ser anterior a la fecha actual.', 1;
@@ -285,13 +280,11 @@ BEGIN
             THROW 60003, 'La fecha final de inscripciones no puede ser anterior a la fecha actual.', 1;
         END
 
-        -- Validar que la fecha inicio sea menor o igual que la fecha final
         IF @FechaInicioInscripciones > @FechaFinalInscripciones
         BEGIN
             THROW 60004, 'La fecha de inicio de inscripciones no puede ser posterior a la fecha final.', 1;
         END
 
-        -- Validar que la fecha final de inscripción esté dentro del rango del torneo
         DECLARE @FechaCierreTorneo DATE;
         SELECT @FechaCierreTorneo = fecha_cierre FROM Torneo WHERE torneo_id = @TorneoID;
 
@@ -300,7 +293,6 @@ BEGIN
             THROW 60005, 'La fecha final de inscripciones no puede ser posterior a la fecha de cierre del torneo.', 1;
         END
 
-        -- Insertar quiniela
         INSERT INTO Quiniela (
             nombre,
             descripcion,
@@ -332,30 +324,15 @@ BEGIN
 END;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 -- =============================================================================
 -- PROCEDIMIENTO: usp_get_quinielas_ordenadas
--- Descripción: Devuelve todas las quinielas ordenadas
---   1) Primero por estado: Abierta → 0, Cerrada → 1, Finalizada → 2, otros → 3
---   2) Luego por fecha de inicio de inscripciones (más reciente primero)
+-- Descripción : Devuelve todas las quinielas ordenadas primero por estado (Abierta, Cerrada, Finalizada, otros)
+--               y luego por fecha de inicio de inscripciones descendente.
+-- Resultado : Lista ordenada de quinielas
 -- =============================================================================
-GO
 CREATE OR ALTER PROCEDURE usp_get_quinielas_ordenadas
 AS
 BEGIN
-    SET NOCOUNT ON;
-
     SELECT
         q.quiniela_id,
         q.nombre,
@@ -381,9 +358,9 @@ GO
 
 -- =============================================================================
 -- PROCEDIMIENTO: usp_get_quiniela_con_partidos
--- Descripción : Devuelve los datos de una quiniela y sus partidos;
---               lanza error si la quiniela no existe
--- Parámetros  : @quiniela_id INT → clave primaria de la quiniela
+-- Descripción : Devuelve los datos de una quiniela y sus partidos asociados.
+--               Lanza error si la quiniela no existe.
+-- Parámetros : @quiniela_id INT → clave primaria de la quiniela
 -- ResultSet 1: Datos de la quiniela
 -- ResultSet 2: Partidos pertenecientes a esa quiniela
 -- =============================================================================
@@ -391,11 +368,6 @@ CREATE OR ALTER PROCEDURE usp_get_quiniela_con_partidos
 @quiniela_id INT
 AS
 BEGIN
-    SET NOCOUNT ON;
-
-    --------------------------------------------------
-    -- 0) Validar existencia de la quiniela
-    --------------------------------------------------
     IF NOT EXISTS (
         SELECT 1
         FROM Quiniela
@@ -409,9 +381,6 @@ BEGIN
             THROW 50001, @mensaje, 1;
         END
 
-    --------------------------------------------------
-    -- 1) Datos de la quiniela
-    --------------------------------------------------
     SELECT
         q.quiniela_id,
         q.nombre,
@@ -426,9 +395,6 @@ BEGIN
     FROM Quiniela AS q
     WHERE q.quiniela_id = @quiniela_id;
 
-    --------------------------------------------------
-    -- 2) Partidos asociados a la quiniela
-    --------------------------------------------------
     SELECT
         p.partido_id,
         el.nombre_equipo AS equipo_local,
@@ -445,4 +411,43 @@ BEGIN
     WHERE pq.quiniela_id = @quiniela_id
     ORDER BY p.fecha_partido, p.hora_partido;
 END
-GO
+
+
+-- =============================================================================
+-- PROCEDIMIENTO: usp_get_quinielas_disponibles
+-- Descripción : Devuelve las quinielas activas a las que un usuario aún no se ha inscrito.
+-- Parámetros : @usuario_id INT → clave primaria del usuario
+-- Resultado : Lista de quinielas disponibles para inscripción por usuario
+-- =============================================================================
+CREATE OR ALTER PROCEDURE usp_get_quinielas_disponibles
+    @usuario_id INT
+AS
+BEGIN
+    SELECT
+        q.quiniela_id,
+        q.nombre,
+        q.descripcion,
+        q.reglas,
+        q.fecha_inicio_inscripciones,
+        q.fecha_final_inscripciones,
+        q.estado,
+        q.modalidad,
+        q.tipo_puntuacion,
+        q.torneo_id
+    FROM Quiniela q
+    WHERE q.estado = 'Activa'
+      AND NOT EXISTS (
+          SELECT 1
+          FROM Inscripcion i
+          WHERE i.quiniela_id = q.quiniela_id
+            AND i.usuario_id = @usuario_id
+      )
+    ORDER BY
+        CASE q.estado
+            WHEN 'Abierta' THEN 0
+            WHEN 'Cerrada' THEN 1
+            WHEN 'Finalizada' THEN 2
+            ELSE 3
+        END,
+        q.fecha_inicio_inscripciones DESC;
+END;

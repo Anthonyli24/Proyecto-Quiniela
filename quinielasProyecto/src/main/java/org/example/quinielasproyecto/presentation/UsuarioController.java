@@ -32,7 +32,6 @@ public class UsuarioController {
             session.setAttribute("nombreUsuario", loginRequest.getNombreUsuario());
             session.setAttribute("rol", response.getRol());
 
-            // Sugerir al frontend una redirección según el rol
             if (response.getRol().equalsIgnoreCase("Administrador")) {
                 response.setMensaje("Login exitoso - redirigir a /admin-dashboard");
             } else if (response.getRol().equalsIgnoreCase("Jugador")) {

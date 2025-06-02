@@ -1,8 +1,5 @@
---Pruebas para login
-
-
+---/Pruebas para login
 -- Login exitoso
-Go
 EXEC sp_ValidarLogin 'cvargas', 'segura123'
 
 -- Login con admin
@@ -11,13 +8,7 @@ EXEC sp_ValidarLogin 'admin', 'adminpass'
 -- Login fallido
 EXEC sp_ValidarLogin 'usuario_malo', 'clave_mala'
 
-
-
-
-
---Pruebas para registro
-
-
+---/Pruebas para registro
 EXEC RegistrarUsuario
     @nombre = 'Anthony Pérez',
     @correo = 'anthony.perez@example.com',
@@ -27,32 +18,11 @@ EXEC RegistrarUsuario
     @estado = 'Activo',
     @rol_id = 2;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
--- Pruebas para funciones y procedimientos del administrador
-
-
+---/Pruebas para funciones y procedimientos del administrador
 -- Ejecutar la funcion obtener partidos
 SELECT * FROM fn_ObtenerPartidos();
 
-
-
-
---Ejecutar InsertarPartido
-
+-- Ejecutar InsertarPartido
 EXEC sp_InsertarPartido
          @FechaPartido = '2025-03-05',
          @HoraPartido = '21:00:00',
@@ -60,13 +30,7 @@ EXEC sp_InsertarPartido
          @EquipoVisitante = 16,
          @TorneoID = 1;
 
-
-
-
-
---Ejecutra ResgistrarQuiniela
-
-
+-- Ejecutra ResgistrarQuiniela
 EXEC sp_RegistrarQuiniela
     @QuinielaID = 1000,
     @Nombre = 'Champions League 2025',

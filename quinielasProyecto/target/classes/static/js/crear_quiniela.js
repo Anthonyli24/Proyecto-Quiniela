@@ -39,3 +39,27 @@ document.getElementById("quinielaForm").addEventListener("submit", function (e) 
             document.getElementById("mensaje").style.color = "red";
         });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const select = document.getElementById('torneoId');
+    const apiUrl = '/api/quinielas/torneos';
+
+    fetch(apiUrl, { credentials: 'include' })
+        .then(res => {
+            if (!res.ok) throw new Error("Error al cargar torneos");
+            return res.json();
+        })
+        .then(torneos => {
+            select.innerHTML = '<option value="">Seleccione un torneo</option>';
+            torneos.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t.id;
+                opt.textContent = `Torneo ${t.id}` + (t.nombre ? ` - ${t.nombre}` : '');
+                select.appendChild(opt);
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            select.innerHTML = '<option value="">Error al cargar</option>';
+        });
+});

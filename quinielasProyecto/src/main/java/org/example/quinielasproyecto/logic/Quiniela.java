@@ -7,6 +7,7 @@ import java.time.LocalDate;
 @Entity
 public class Quiniela {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "quiniela_id", nullable = false)
     private Integer id;
 

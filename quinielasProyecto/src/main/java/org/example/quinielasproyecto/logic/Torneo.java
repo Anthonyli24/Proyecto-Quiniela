@@ -12,6 +12,9 @@ public class Torneo {
     @Column(name = "torneo_id", nullable = false)
     private Integer id;
 
+    @Column(name = "torneo_nombre")
+    private String torneoNombre;
+
     @Column(name = "fecha_inicio", nullable = false)
     private LocalDate fechaInicio;
 
@@ -28,6 +31,10 @@ public class Torneo {
     public void setId(Integer id) {
         this.id = id;
     }
+
+    public String getTorneoNombre() {return torneoNombre;}
+
+    public void setTorneoNombre(String torneoNombre) {this.torneoNombre = torneoNombre;}
 
     public LocalDate getFechaInicio() {
         return fechaInicio;

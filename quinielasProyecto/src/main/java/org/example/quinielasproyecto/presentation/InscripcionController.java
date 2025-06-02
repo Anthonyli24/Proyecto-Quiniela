@@ -1,13 +1,12 @@
 package org.example.quinielasproyecto.presentation;
 
 import jakarta.servlet.http.HttpSession;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.example.quinielasproyecto.data.InscripcionRepository;
 import org.example.quinielasproyecto.data.QuinielaJpaRepository;
 import org.example.quinielasproyecto.data.UsuarioJpaRepository;
-import org.example.quinielasproyecto.logic.Inscripcion;
-import org.example.quinielasproyecto.logic.Quiniela;
-import org.example.quinielasproyecto.logic.Usuario;
+import org.example.quinielasproyecto.logic.Entidades.Inscripcion;
+import org.example.quinielasproyecto.logic.Entidades.Quiniela;
+import org.example.quinielasproyecto.logic.Entidades.Usuario;
 import org.example.quinielasproyecto.logic.dto.QuinielaDTO;
 import org.example.quinielasproyecto.logic.dto.QuinielaResponse;
 import org.example.quinielasproyecto.logic.dto.RankingDTO;

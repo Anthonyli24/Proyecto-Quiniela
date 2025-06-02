@@ -1,8 +1,8 @@
 package org.example.quinielasproyecto.logic.service;
 
 import org.example.quinielasproyecto.data.InscripcionRepository;
-import org.example.quinielasproyecto.logic.Inscripcion;
-import org.example.quinielasproyecto.logic.Quiniela;
+import org.example.quinielasproyecto.logic.Entidades.Inscripcion;
+import org.example.quinielasproyecto.logic.Entidades.Quiniela;
 import org.example.quinielasproyecto.logic.dto.QuinielaDTO;
 import org.example.quinielasproyecto.logic.dto.QuinielaResponse;
 import org.example.quinielasproyecto.logic.dto.RankingDTO;

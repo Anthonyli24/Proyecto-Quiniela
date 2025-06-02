@@ -1,7 +1,7 @@
 package org.example.quinielasproyecto.presentation;
 
 import org.example.quinielasproyecto.data.TorneoRepository;
-import org.example.quinielasproyecto.logic.Torneo;
+import org.example.quinielasproyecto.logic.Entidades.Torneo;
 import org.example.quinielasproyecto.logic.dto.QuinielaRequest;
 import org.example.quinielasproyecto.logic.dto.QuinielaResponse;
 import org.example.quinielasproyecto.logic.service.QuinielaService;

@@ -1,12 +1,10 @@
 package org.example.quinielasproyecto.data;
 import jakarta.persistence.*;
-import org.example.quinielasproyecto.logic.Usuario;
 import org.example.quinielasproyecto.logic.dto.LoginResponse;
 import org.example.quinielasproyecto.logic.dto.RegistroRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public class UsuarioRepository  {

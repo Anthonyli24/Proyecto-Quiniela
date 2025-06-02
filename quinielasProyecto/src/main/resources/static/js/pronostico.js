@@ -64,10 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 tbody.querySelectorAll('.btn-pronosticar').forEach(btn => {
                     btn.addEventListener('click', e => {
-                        const partidoId = e.currentTarget.getAttribute('data-id');
-                        window.location.href = `/jugador/pronosticar.html?partidoId=${partidoId}`;
+                        console.log("Click detectado en botón pronosticar");
+                        const partidoId = parseInt(e.currentTarget.getAttribute('data-id'));
+                        const partido = data.partidos.find(p => p.partidoId === partidoId);
+                        console.log("Partido encontrado:", partido);
+                        if (partido) abrirModal(partido);
                     });
                 });
+
 
             } else {
                 tbody.innerHTML = `
@@ -89,4 +93,86 @@ document.addEventListener('DOMContentLoaded', () => {
     function formatTime(tstr) {
         return tstr;
     }
+
+    // Referencias al modal y sus campos
+    const modal = document.getElementById('pronostico-modal');
+    const modalInfo = document.getElementById('modal-info');
+    const inputGL = document.getElementById('input-gl');
+    const inputGV = document.getElementById('input-gv');
+    const btnConfirmar = document.getElementById('btn-confirmar');
+    const btnCancelar = document.getElementById('btn-cancelar');
+
+    let partidoSeleccionado = null; // Para guardar el partido que se seleccionó
+
+// Mostrar modal con la info del partido
+    function abrirModal(partido) {
+        partidoSeleccionado = partido;
+
+        const ahora = new Date();
+        modalInfo.innerHTML = `
+    <strong>${partido.equipoLocal}</strong> vs 
+    <strong>${partido.equipoVisitante}</strong><br>
+    Fecha actual: ${ahora.toLocaleDateString()}<br>
+    Hora actual: ${ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+`;
+
+        inputGL.value = partido.golesLocal ?? '';
+        inputGV.value = partido.golesVisitante ?? '';
+        modal.style.display = 'flex';
+    }
+
+// Cerrar modal
+    function cerrarModal() {
+        modal.style.display = 'none';
+        partidoSeleccionado = null;
+        inputGL.value = '';
+        inputGV.value = '';
+    }
+
+// Cuando se hace clic en "Listo"
+    btnConfirmar.addEventListener('click', () => {
+        const gl = parseInt(inputGL.value);
+        const gv = parseInt(inputGV.value);
+
+        if (isNaN(gl) || isNaN(gv)) {
+            alert("Debes ingresar valores numéricos válidos para los goles.");
+            return;
+        }
+
+        fetch('/api/pronosticar/registrar', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                partidoId: partidoSeleccionado.partidoId,
+                golesLocal: gl,
+                golesVisitante: gv,
+                quinielaId: id,
+                fechaPronostico: new Date().toISOString().split('T')[0], // yyyy-mm-dd
+                horaPronostico: new Date().toTimeString().split(' ')[0], // HH:MM:SS
+            })
+        })
+            .then(res => {
+                if (!res.ok) throw new Error("Error al registrar el pronóstico.");
+                return res.json();
+            })
+            .then(res => {
+                alert("¡Pronóstico registrado exitosamente!");
+                cerrarModal();
+                location.reload(); // recargar para reflejar cambios
+            })
+            .catch(err => {
+                alert(err.message);
+            });
+    });
+
+// Cuando se hace clic en "Cancelar"
+    btnCancelar.addEventListener('click', cerrarModal);
+
+
 });
+
+
+

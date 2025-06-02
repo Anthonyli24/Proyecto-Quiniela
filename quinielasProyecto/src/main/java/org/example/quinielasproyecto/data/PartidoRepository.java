@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PartidoRepository {
-
     @PersistenceContext
     private EntityManager entityManager;
 

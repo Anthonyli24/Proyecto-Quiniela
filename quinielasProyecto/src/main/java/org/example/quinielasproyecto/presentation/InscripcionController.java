@@ -80,7 +80,6 @@ public class InscripcionController {
         }
 
         int usuarioId = (Integer) usuarioIdObj;
-        System.out.println("usuarioId desde sesión: " + usuarioId);
 
         List<QuinielaResponse> quinielas = inscripcionService.obtenerQuinielasOrdenadasNoInscritas(usuarioId);
         return ResponseEntity.ok(quinielas);

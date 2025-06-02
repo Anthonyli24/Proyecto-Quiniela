@@ -62,8 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             if (!res.ok) throw new Error("Error al inscribirse");
                             return res.text();
                         })
-                        .then(msg => alert(msg))
-                        .catch(err => alert(err.message));
+                        .then(msg => {
+                            mostrarPopup(msg, () => {
+                                location.reload();
+                            });
+                        })
+
+                        .catch(err => {
+                            mostrarPopup(err.message);
+                        });
+
                 });
 
             });
@@ -71,6 +79,24 @@ document.addEventListener('DOMContentLoaded', () => {
         .catch(err => {
             container.innerHTML = `<p class="error">${err.message}</p>`;
         });
+
+    function mostrarPopup(mensaje, onClose = null) {
+        const mensajeElemento = document.getElementById('modalInscripcionMensaje');
+        mensajeElemento.textContent = mensaje;
+
+        const modalElement = document.getElementById('inscripcionModal');
+        const modal = new bootstrap.Modal(modalElement);
+
+        if (onClose) {
+            modalElement.addEventListener('hidden.bs.modal', function handler() {
+                modalElement.removeEventListener('hidden.bs.modal', handler);
+                onClose();
+            });
+        }
+
+        modal.show();
+    }
+
 
     function formatDate(dstr) {
         const d = new Date(dstr);

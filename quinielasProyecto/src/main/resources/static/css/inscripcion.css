@@ -1,8 +1,10 @@
 :root {
     --primary-color: #1a237e;
-    --accent-color: #fdd835;
-    --bg-color: #f5f5f5;
-    --text-color: #333;
+    --accent-color: #00ff88;
+    --bg-dark: #1e1e2f;
+    --card-dark: #2e2e44;
+    --text-light: #f0f0f0;
+    --text-dark: #333;
 }
 
 * {
@@ -13,38 +15,46 @@
 
 body {
     font-family: 'Segoe UI', sans-serif;
-    background-color: var(--bg-color);
-    color: var(--text-color);
+    background: url('../img/img1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: var(--text-light);
+    min-height: 100vh;
 }
 
 .custom-navbar {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    background-color: var(--primary-color);
-    padding: 1rem;
+    background-color: var(--bg-dark);
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
 .custom-navbar a {
-    color: #fff;
+    color: var(--accent-color);
     text-decoration: none;
     padding: 0.5rem 1rem;
+    font-weight: bold;
     border-radius: 4px;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
 }
 
 .custom-navbar a:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.1);
+    color: #00e676;
 }
 
 .container {
     max-width: 1000px;
     margin: 2rem auto;
-    padding: 0 1rem;
+    padding: 2rem;
+    background-color: var(--bg-dark);
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
 h1 {
-    color: var(--primary-color);
+    color: var(--accent-color);
     font-size: 2.5rem;
     margin-bottom: 1rem;
 }
@@ -55,7 +65,6 @@ h1 {
     margin-bottom: 2rem;
 }
 
-/* --- Sección Quinielas --- */
 .actions {
     text-align: right;
     margin-bottom: 1rem;
@@ -68,35 +77,41 @@ h1 {
 }
 
 .card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: var(--card-dark);
+    border: none;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    color: var(--text-light);
 }
 
 .card-title {
     font-size: 1.25rem;
     margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    color: var(--accent-color);
 }
 
 .card-text {
     margin-bottom: 0.5rem;
-    color: var(--text-color);
 }
 
 .btn {
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
+    padding: 0.75rem 1.2rem;
     font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
 }
 
 .btn-primary {
     background-color: var(--accent-color);
-    color: #333;
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: #00e676;
 }
 
 .btn-secondary {
@@ -105,13 +120,34 @@ h1 {
     margin-right: 0.5rem;
 }
 
-/* --- Detalle de Quiniela --- */
+.btn-secondary:hover {
+    background-color: #0d165c;
+}
+
+#quinielas-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px;
+}
+
+#quinielas-container p {
+    color: var(--text-light);
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
+}
+
+
 .detail-card {
-    background-color: #fff;
+    background-color: var(--card-dark);
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    margin-top: 2rem;
     margin-bottom: 2rem;
+    color: var(--text-light);
 }
 
 .detail-card p {
@@ -119,29 +155,25 @@ h1 {
 }
 
 .detail-card strong {
-    color: var(--primary-color);
+    color: var(--accent-color);
 }
 
 .detail-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 2rem;
+    background-color: var(--card-dark);
+    color: var(--text-light);
 }
 
 .detail-table th,
 .detail-table td {
-    border: 1px solid #ddd;
+    border: 1px solid #444;
     padding: 0.75rem;
     text-align: left;
 }
 
 .detail-table th {
-    background-color: var(--primary-color);
-    color: #fff;
-}
-
-.btn-secondary {
-    background-color: var(--primary-color);
-    color: #fff;
-    margin-bottom: 1.5rem;
+    background-color: var(--accent-color);
+    color: #000;
 }

@@ -14,4 +14,8 @@ public interface InscripcionRepository extends JpaRepository<Inscripcion, Intege
 
     @Query(value = "EXEC usp_get_quinielas_disponibles :usuarioId", nativeQuery = true)
     List<Object[]> getQuinielasDisponibles(@Param("usuarioId") int usuarioId);
+
+    List<Inscripcion> findByUsuarioId(Long usuarioId);
+
+    List<Inscripcion> findByQuinielaIdOrderByPuntajeDesc(Long quinielaId);
 }

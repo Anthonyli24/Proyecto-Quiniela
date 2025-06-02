@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { label: 'Dashboard',       href: '../jugador-dashboard.html' },
         { label: 'Inscripción',       href: '/jugador/inscripcion.html' },
         { label: 'Jugar',        href: '/jugador/jugar.html' },
-        { label: 'Ranking',        href: '/jugador/ranking.html' },
+        { label: 'Ranking',        href: '/jugador/quiniela-Ranking.html' },
         { label: 'Cerrar sesión',   href: '/api/usuarios/logout', apiCall: true }
     ];
 

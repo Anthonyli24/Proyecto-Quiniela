@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } else {
                 tbody.innerHTML = `
-          <tr>
+          <tr class="no-data-row">
             <td colspan="7">No hay partidos registrados para esta quiniela.</td>
           </tr>
         `;

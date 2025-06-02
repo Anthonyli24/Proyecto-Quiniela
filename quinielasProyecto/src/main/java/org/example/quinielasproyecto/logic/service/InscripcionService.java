@@ -1,7 +1,11 @@
 package org.example.quinielasproyecto.logic.service;
 
 import org.example.quinielasproyecto.data.InscripcionRepository;
+import org.example.quinielasproyecto.logic.Inscripcion;
+import org.example.quinielasproyecto.logic.Quiniela;
+import org.example.quinielasproyecto.logic.dto.QuinielaDTO;
 import org.example.quinielasproyecto.logic.dto.QuinielaResponse;
+import org.example.quinielasproyecto.logic.dto.RankingDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +34,26 @@ public class InscripcionService {
                         (String) cols[8],
                         (Integer) cols[9]
                 ))
+                .collect(Collectors.toList());
+    }
+
+    public List<QuinielaDTO> obtenerQuinielasDeUsuario(Long usuarioId) {
+        List<Inscripcion> inscripciones = inscripcionRepository.findByUsuarioId(usuarioId);
+        return inscripciones.stream()
+                .map(i -> {
+                    Quiniela q = i.getQuiniela();
+                    QuinielaDTO dto = new QuinielaDTO();
+                    dto.setId(q.getId());
+                    dto.setNombre(q.getNombre());
+                    return dto;
+                }).collect(Collectors.toList());
+    }
+
+
+    public List<RankingDTO> obtenerRankingPorQuiniela(Long quinielaId) {
+        List<Inscripcion> inscripciones = inscripcionRepository.findByQuinielaIdOrderByPuntajeDesc(quinielaId);
+        return inscripciones.stream()
+                .map(i -> new RankingDTO(i.getUsuario().getNombre(), i.getPuntaje()))
                 .collect(Collectors.toList());
     }
 }

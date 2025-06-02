@@ -8,7 +8,9 @@ import org.example.quinielasproyecto.data.UsuarioJpaRepository;
 import org.example.quinielasproyecto.logic.Inscripcion;
 import org.example.quinielasproyecto.logic.Quiniela;
 import org.example.quinielasproyecto.logic.Usuario;
+import org.example.quinielasproyecto.logic.dto.QuinielaDTO;
 import org.example.quinielasproyecto.logic.dto.QuinielaResponse;
+import org.example.quinielasproyecto.logic.dto.RankingDTO;
 import org.example.quinielasproyecto.logic.service.InscripcionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -83,5 +85,15 @@ public class InscripcionController {
 
         List<QuinielaResponse> quinielas = inscripcionService.obtenerQuinielasOrdenadasNoInscritas(usuarioId);
         return ResponseEntity.ok(quinielas);
+    }
+
+    @GetMapping("/usuarios/{usuarioId}/quinielas")
+    public List<QuinielaDTO> getQuinielasDeUsuario(@PathVariable Long usuarioId) {
+        return inscripcionService.obtenerQuinielasDeUsuario(usuarioId);
+    }
+
+    @GetMapping("/quinielas/{quinielaId}/ranking")
+    public List<RankingDTO> getRankingDeQuiniela(@PathVariable Long quinielaId) {
+        return inscripcionService.obtenerRankingPorQuiniela(quinielaId);
     }
 }

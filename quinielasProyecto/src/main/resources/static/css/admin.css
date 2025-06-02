@@ -134,25 +134,21 @@ h1 {
     color: var(--text-light);
 }
 
-.detail-card p {
-    margin: 0.5rem 0;
-}
-
-.detail-card strong {
-    color: var(--accent-color);
-}
-
 .detail-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 1rem;
     margin-bottom: 2rem;
     background-color: var(--card-dark);
     color: var(--text-light);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
 }
 
 .detail-table th,
 .detail-table td {
-    border: 1px solid #444;
     padding: 0.75rem;
     text-align: left;
 }
@@ -160,4 +156,17 @@ h1 {
 .detail-table th {
     background-color: var(--accent-color);
     color: #000;
+}
+
+.detail-table tbody tr:nth-child(even) {
+    background-color: #3a3a55;
+}
+
+.detail-table tbody tr:nth-child(odd) {
+    background-color: #2e2e44;
+}
+
+.detail-table tbody tr:hover {
+    background-color: #44445f;
+    transition: background 0.2s ease-in-out;
 }

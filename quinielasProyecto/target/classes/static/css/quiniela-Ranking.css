@@ -4,7 +4,6 @@
     --bg-dark: #1e1e2f;
     --card-dark: #2e2e44;
     --text-light: #f0f0f0;
-    --text-dark: #333;
 }
 
 * {
@@ -21,7 +20,7 @@ body {
     min-height: 100vh;
 }
 
-.navbar {
+.custom-navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -30,7 +29,7 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
 }
 
-.navbar a {
+.custom-navbar a {
     color: var(--accent-color);
     text-decoration: none;
     padding: 0.5rem 1rem;
@@ -39,7 +38,7 @@ body {
     transition: background 0.2s, color 0.2s;
 }
 
-.navbar a:hover {
+.custom-navbar a:hover {
     background: rgba(255, 255, 255, 0.1);
     color: #00e676;
 }
@@ -53,21 +52,11 @@ body {
     box-shadow: 0 0 20px rgba(0,0,0,0.6);
 }
 
-h1 {
+.custom-h1 {
     color: var(--accent-color);
     font-size: 2.5rem;
     margin-bottom: 1rem;
-}
-
-.description {
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-}
-
-.actions {
-    text-align: right;
-    margin-bottom: 1rem;
+    text-align: center;
 }
 
 .card-container {
@@ -78,21 +67,19 @@ h1 {
 
 .card {
     background-color: var(--card-dark);
-    border: none;
     border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     color: var(--text-light);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .card-title {
-    font-size: 1.25rem;
-    margin-bottom: 0.5rem;
-    color: var(--accent-color);
-}
-
-.card-text {
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    font-weight: bold;
 }
 
 .btn {
@@ -114,59 +101,15 @@ h1 {
     background-color: #00e676;
 }
 
-.btn-secondary {
-    background-color: var(--primary-color);
-    color: #fff;
-    margin-right: 0.5rem;
+#quinielas-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.btn-secondary:hover {
-    background-color: #0d165c;
-}
-
-.detail-card {
-    background-color: var(--card-dark);
-    padding: 1.5rem;
-    border-radius: 12px;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
-    margin-top: 2rem;
-    margin-bottom: 2rem;
+#quinielas-container p {
     color: var(--text-light);
-}
-
-.detail-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    background-color: var(--card-dark);
-    color: var(--text-light);
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
-}
-
-.detail-table th,
-.detail-table td {
-    padding: 0.75rem;
-    text-align: left;
-}
-
-.detail-table th {
-    background-color: var(--accent-color);
-    color: #000;
-}
-
-.detail-table tbody tr:nth-child(even) {
-    background-color: #3a3a55;
-}
-
-.detail-table tbody tr:nth-child(odd) {
-    background-color: #2e2e44;
-}
-
-.detail-table tbody tr:hover {
-    background-color: #44445f;
-    transition: background 0.2s ease-in-out;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
 }

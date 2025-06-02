@@ -12,27 +12,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const activas = quinielas.filter(q => q.estado === 'Activa');
 
             if (activas.length === 0) {
-                container.innerHTML = '<p>No hay quinielas activas.</p>';
+                container.innerHTML = '<p>No hay mas quinielas para inscribirse.</p>';
                 return;
             }
 
             activas.forEach(q => {
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = 'qd-card';
                 card.innerHTML = `
-                    <h3 class="card-title">${q.nombre}</h3>
-                    <p class="card-text">
+                    <h3 class="qd-card-title">${q.nombre}</h3>
+                    <p class="qd-card-text">
                         Inscripciones:
                         ${formatDate(q.fechaInicioInscripciones)}
                         al
                         ${formatDate(q.fechaFinalInscripciones)}
                     </p>
-                    <p class="card-text">Estado: ${q.estado}</p>
+                    <p class="qd-card-text">Estado: ${q.estado}</p>
                     <button
-                        class="btn btn-secondary btn-ver"
+                        class="btn btn-secondary btn-ver btn-margin-top"
                         data-id="${q.quinielaId}">
                         Inscripción
                     </button>
+
                 `;
                 container.appendChild(card);
             });

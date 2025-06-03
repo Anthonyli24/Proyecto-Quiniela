@@ -76,3 +76,16 @@ button:hover {
 .exito {
     color: #00ff88;
 }
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background-color: #444;
+    color: #fff;
+    font-size: 14px;
+    box-sizing: border-box;
+}

@@ -38,64 +38,24 @@
     </table>
 </main>
 
-
-
-
-<div id="pronostico-modal" class="modal" style="display: none;">
+<div id="pronostico-modal" class="modal">
     <div class="modal-content">
-        <h3>Pronosticar Partido</h3>
+        <h3>Registrar Pronóstico</h3>
         <p id="modal-info"></p>
-        <label>Goles Local: <input type="number" id="input-gl" min="0"></label><br><br>
-        <label>Goles Visitante: <input type="number" id="input-gv" min="0"></label><br><br>
-        <button id="btn-confirmar" class="btn btn-primary">Listo</button>
-        <button id="btn-cancelar" class="btn btn-secondary">Cancelar</button>
+        <div class="form-group">
+            <label for="input-gl">Goles Local</label>
+            <input type="number" id="input-gl" placeholder="Ej: 1" min="0">
+        </div>
+        <div class="form-group">
+            <label for="input-gv">Goles Visita</label>
+            <input type="number" id="input-gv" placeholder="Ej: 2" min="0">
+        </div>
+        <div class="modal-buttons">
+            <button id="btn-confirmar" class="btn-confirmar">Confirmar</button>
+            <button id="btn-cancelar" class="btn-cancel">Cancelar</button>
+        </div>
     </div>
 </div>
-
-<!-- Estilos rápidos para el modal -->
-<style>
-    .modal {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 1000;
-    }
-    .modal-content {
-        background: #001f3f; /* Azul oscuro */
-        color: white; /* Texto blanco para mejor contraste */
-        padding: 20px;
-        border-radius: 10px;
-        width: 300px;
-        text-align: center;
-    }
-
-    .modal-content input {
-        width: 60px;
-    }
-
-    .modal-content button {
-        padding: 0.75rem 1.2rem;
-        font-size: 1rem;
-        font-weight: bold;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background 0.3s ease;
-        background-color: #007BFF; /* Azul base */
-        color: white;
-        margin: 5px;
-    }
-
-    .modal-content button:hover {
-        background-color: #0056b3; /* Azul más oscuro al pasar el cursor */
-    }
-
-</style>
-
 
 <script src="../js/jugador.js"></script>
 <script src="../js/pronostico.js"></script>

@@ -94,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return tstr;
     }
 
-    // Referencias al modal y sus campos
     const modal = document.getElementById('pronostico-modal');
     const modalInfo = document.getElementById('modal-info');
     const inputGL = document.getElementById('input-gl');
@@ -102,9 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnConfirmar = document.getElementById('btn-confirmar');
     const btnCancelar = document.getElementById('btn-cancelar');
 
-    let partidoSeleccionado = null; // Para guardar el partido que se seleccionó
+    let partidoSeleccionado = null;
 
-// Mostrar modal con la info del partido
     function abrirModal(partido) {
         partidoSeleccionado = partido;
 
@@ -112,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         modalInfo.innerHTML = `
     <strong>${partido.equipoLocal}</strong> vs 
     <strong>${partido.equipoVisitante}</strong><br>
-    Fecha actual: ${ahora.toLocaleDateString()}<br>
-    Hora actual: ${ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+    Fecha del partido: ${ahora.toLocaleDateString()}<br>
+    Hora del partido: ${ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
 `;
 
         inputGL.value = partido.golesLocal ?? '';
@@ -121,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = 'flex';
     }
 
-// Cerrar modal
     function cerrarModal() {
         modal.style.display = 'none';
         partidoSeleccionado = null;
@@ -129,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         inputGV.value = '';
     }
 
-// Cuando se hace clic en "Listo"
     btnConfirmar.addEventListener('click', () => {
         const gl = parseInt(inputGL.value);
         const gv = parseInt(inputGV.value);
@@ -150,8 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 golesLocal: gl,
                 golesVisitante: gv,
                 quinielaId: id,
-                fechaPronostico: new Date().toISOString().split('T')[0], // yyyy-mm-dd
-                horaPronostico: new Date().toTimeString().split(' ')[0], // HH:MM:SS
+                fechaPronostico: new Date().toISOString().split('T')[0],
+                horaPronostico: new Date().toTimeString().split(' ')[0],
             })
         })
             .then(res => {
@@ -161,16 +157,14 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => {
                 alert("¡Pronóstico registrado exitosamente!");
                 cerrarModal();
-                location.reload(); // recargar para reflejar cambios
+                location.reload();
             })
             .catch(err => {
                 alert(err.message);
             });
     });
 
-// Cuando se hace clic en "Cancelar"
     btnCancelar.addEventListener('click', cerrarModal);
-
 
 });
 

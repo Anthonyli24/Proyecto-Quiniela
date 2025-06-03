@@ -42,3 +42,18 @@ EXEC sp_RegistrarQuiniela
     @Modalidad = 'Individual',
     @TipoPuntuacion = 'Por resultado',
     @TorneoID = 1;
+
+-- Ejercutar CrearTorneo
+EXEC sp_CrearTorneo 
+    @torneo_nombre = 'Copa SQL',
+    @fecha_inicio = '2025-06-10',
+    @fecha_cierre = '2025-07-01',
+    @resultado_final = NULL;
+
+EXEC sp_CrearTorneo 
+    @torneo_nombre = 'Torneo Erróneo',
+    @fecha_inicio = '2025-07-01',
+    @fecha_cierre = '2025-06-10',
+    @resultado_final = NULL;
+
+

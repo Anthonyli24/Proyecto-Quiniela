@@ -1,6 +1,6 @@
 package org.example.quinielasproyecto.presentation;
 
-import org.example.quinielasproyecto.data.TorneoRepository;
+import org.example.quinielasproyecto.data.TorneoJPARepository;
 import org.example.quinielasproyecto.logic.Entidades.Torneo;
 import org.example.quinielasproyecto.logic.dto.QuinielaRequest;
 import org.example.quinielasproyecto.logic.dto.QuinielaResponse;
@@ -23,7 +23,7 @@ public class QuinielaController {
     private QuinielaService quinielaService;
 
     @Autowired
-    private TorneoRepository torneoRepository;
+    private TorneoJPARepository torneoJPARepository;
 
     @PostMapping("/registrar")
     public ResponseEntity<?> crearQuiniela(@RequestBody QuinielaRequest request) {
@@ -49,7 +49,7 @@ public class QuinielaController {
 
     @GetMapping("/torneos")
     public ResponseEntity<List<Map<String, Object>>> obtenerTorneos() {
-        List<Torneo> torneos = torneoRepository.findAll();
+        List<Torneo> torneos = torneoJPARepository.findAll();
 
         List<Map<String, Object>> result = torneos.stream().map(torneo -> {
             Map<String, Object> map = new HashMap<>();

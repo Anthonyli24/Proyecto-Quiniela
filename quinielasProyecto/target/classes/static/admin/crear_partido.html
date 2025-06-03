@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <title>Crear Partido</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="../css/registro.css" />
+</head>
+<body>
+<div class="container">
+    <h2>Crear Partido</h2>
+    <form id="partidoForm">
+
+        <div class="form-group">
+            <label for="fechaPartido">Fecha del Partido</label>
+            <input type="date" id="fechaPartido" name="fechaPartido" required />
+        </div>
+
+        <div class="form-group">
+            <label for="horaPartido">Hora del Partido</label>
+            <input type="time" id="horaPartido" name="horaPartido" required />
+        </div>
+
+        <div class="form-group">
+            <label for="equipoLocal">Equipo Local</label>
+            <select id="equipoLocal" name="equipoLocal" required>
+                <option value="">Seleccione equipo local</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="equipoVisitante">Equipo Visitante</label>
+            <select id="equipoVisitante" name="equipoVisitante" required>
+                <option value="">Seleccione equipo visitante</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="torneoId">Torneo</label>
+            <select id="torneoId" name="torneoId" required>
+                <option value="">Cargando torneos...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="estado">Estado del Partido</label>
+            <select id="estado" name="estado" required>
+                <option value="pendiente" selected>Pendiente</option>
+                <option value="en juego">En Juego</option>
+                <option value="finalizado">Finalizado</option>
+            </select>
+        </div>
+
+        <button type="submit">Registrar Partido</button>
+
+    </form>
+    <div class="mensaje" id="mensaje"></div>
+</div>
+
+<script src="../js/crear_partido.js"></script>
+</body>
+</html>

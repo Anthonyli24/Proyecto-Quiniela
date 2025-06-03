@@ -1,7 +1,20 @@
 package org.example.quinielasproyecto.data;
 
-import org.example.quinielasproyecto.logic.Entidades.Torneo;
-import org.springframework.data.jpa.repository.JpaRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.springframework.stereotype.Repository;
 
-public interface TorneoRepository extends JpaRepository<Torneo, Integer> {
+import java.util.List;
+
+@Repository
+public class TorneoRepository {
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public List<Object[]> obtenerTorneos() {
+        return entityManager
+                .createNativeQuery("EXEC sp_ObtenerNombresTorneos")
+                .getResultList();
+    }
+
 }

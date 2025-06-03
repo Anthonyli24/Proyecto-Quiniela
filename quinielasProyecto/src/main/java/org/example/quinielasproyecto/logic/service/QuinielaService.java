@@ -80,7 +80,8 @@ public class QuinielaService {
                             ((java.sql.Date) cols[4]).toLocalDate(),
                             ((java.sql.Time) cols[5]).toLocalTime(),
                             (Integer) cols[6],
-                            (Integer) cols[7]
+                            (Integer) cols[7],
+                            cols.length > 8 ? (String) cols[8] : null
                     ))
                     .collect(Collectors.toList());
 

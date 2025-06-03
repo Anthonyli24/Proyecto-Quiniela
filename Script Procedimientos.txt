@@ -451,3 +451,106 @@ BEGIN
         END,
         q.fecha_inicio_inscripciones DESC;
 END;
+
+-- =============================================================================
+-- PROCEDIMIENTO: sp_CrearTorneo
+-- Descripción : Inserta un nuevo torneo en la tabla Torneo y retorna su ID.
+-- Parámetros :
+--     @torneo_nombre     -> Nombre del torneo
+--     @fecha_inicio      -> Fecha de inicio del torneo
+--     @fecha_cierre      -> Fecha de cierre del torneo
+--     @resultado_final   -> Resultado final del torneo (opcional)
+--     @nuevo_torneo_id   -> OUTPUT: ID del torneo recién insertado
+-- Resultado : Inserta el torneo y devuelve el ID generado
+-- Notas :
+--     - Valida que la fecha de inicio no sea posterior a la de cierre
+--     - Usa TRY...CATCH para manejo de errores
+-- =============================================================================
+CREATE PROCEDURE sp_CrearTorneo
+    @torneo_nombre VARCHAR(255),
+    @fecha_inicio DATE,
+    @fecha_cierre DATE,
+    @resultado_final VARCHAR(255) = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        IF @fecha_inicio > @fecha_cierre
+        BEGIN
+            RAISERROR('La fecha de inicio no puede ser posterior a la fecha de cierre.', 16, 1);
+            RETURN;
+        END
+
+        INSERT INTO Torneo (torneo_nombre, fecha_inicio, fecha_cierre, resultado_final)
+        VALUES (@torneo_nombre, @fecha_inicio, @fecha_cierre, @resultado_final);
+		SELECT 1;
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@ErrorMessage, 16, 1);
+    END CATCH
+END;
+
+-- =============================================================================
+-- PROCEDIMIENTO: sp_ObtenerPartidos
+-- Descripción : Devuelve todos los registros de la tabla Partido, con los nombres de equipos y torneo
+-- =============================================================================
+CREATE OR ALTER PROCEDURE sp_ObtenerPartidos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        p.partido_id,               -- 0
+        el.nombre_equipo,           -- 1
+        ev.nombre_equipo,           -- 2
+        p.estado_partido,           -- 3
+        p.fecha_partido,            -- 4
+        p.hora_partido,             -- 5
+        p.goles_local,              -- 6
+        p.goles_visitante,          -- 7
+        t.torneo_nombre             -- 8
+    FROM Partido p
+    INNER JOIN Equipo el ON p.equipo_local = el.equipo_id
+    INNER JOIN Equipo ev ON p.equipo_visitante = ev.equipo_id
+    INNER JOIN Torneo t ON p.torneo_id = t.torneo_id
+    ORDER BY p.fecha_partido, p.hora_partido;
+END;
+
+EXEC sp_ObtenerPartidos;
+
+
+select * from Torneo;
+
+-- =============================================================================
+-- PROCEDIMIENTO: sp_ObtenerNombresTorneos
+-- Descripción : Devuelve una lista con los ID y nombres de todos los torneos
+-- Resultado : Lista de torneos (torneo_id, torneo_nombre)
+-- =============================================================================
+CREATE OR ALTER PROCEDURE sp_ObtenerNombresTorneos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT torneo_id, torneo_nombre
+    FROM Torneo
+    ORDER BY torneo_nombre;
+END;
+
+EXEC sp_ObtenerNombresTorneos;
+
+-- =============================================================================
+-- PROCEDIMIENTO: sp_ObtenerEquipos
+-- Descripción : Devuelve una lista con los ID y nombres de todos los equipos
+-- Resultado : Lista de equipos (equipo_id, nombre_equipo)
+-- =============================================================================
+CREATE OR ALTER PROCEDURE sp_ObtenerEquipos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT equipo_id, nombre_equipo
+    FROM Equipo
+    ORDER BY nombre_equipo;
+END;

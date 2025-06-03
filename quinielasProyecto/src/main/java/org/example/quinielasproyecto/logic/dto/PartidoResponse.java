@@ -14,6 +14,8 @@ public class PartidoResponse {
     private int golesLocal;
     private int golesVisitante;
 
+    private String torneoNombre;
+
     public PartidoResponse() {
     }
 
@@ -24,7 +26,8 @@ public class PartidoResponse {
                            LocalDate fechaPartido,
                            LocalTime horaPartido,
                            int golesLocal,
-                           int golesVisitante) {
+                           int golesVisitante,
+                           String torneoNombre) {
         this.partidoId = partidoId;
         this.equipoLocal = equipoLocal;
         this.equipoVisitante = equipoVisitante;
@@ -33,8 +36,10 @@ public class PartidoResponse {
         this.horaPartido = horaPartido;
         this.golesLocal = golesLocal;
         this.golesVisitante = golesVisitante;
+        this.torneoNombre = torneoNombre;
     }
 
+    public String getTorneoNombre() {return torneoNombre;}
     public int getPartidoId() {
         return partidoId;
     }
@@ -89,5 +94,9 @@ public class PartidoResponse {
 
     public void setGolesVisitante(int golesVisitante) {
         this.golesVisitante = golesVisitante;
+    }
+
+    public void setTorneoNombre(String torneoNombre) {
+        this.torneoNombre = torneoNombre;
     }
 }

@@ -554,3 +554,51 @@ BEGIN
     FROM Equipo
     ORDER BY nombre_equipo;
 END;
+
+
+-- =============================================================================
+-- TRIGGER     : tr_InsertarPartidosEnPartidoQuiniela
+-- Tabla       : Quiniela
+-- Evento      : AFTER INSERT
+-- Descripción : Al insertar una nueva quiniela, este trigger busca todos los
+--              partidos del torneo asociado a esa quiniela e inserta en la
+--              tabla Partido_Quiniela la relación correspondiente.
+-- =============================================================================
+CREATE TRIGGER tr_InsertarPartidosEnPartidoQuiniela
+ON Quiniela
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Partido_Quiniela (partido_id, quiniela_id)
+    SELECT p.partido_id, i.quiniela_id
+    FROM inserted i
+    INNER JOIN Partido p ON p.torneo_id = i.torneo_id;
+END;
+GO
+
+
+-- =============================================================================
+-- TRIGGER     : tr_InsertarPartidoEnQuinielasRelacionadas
+-- Tabla       : Partido
+-- Evento      : AFTER INSERT
+-- Descripción : Al insertar un nuevo partido, este trigger verifica si existe
+--              alguna quiniela relacionada con el torneo del partido y, si es
+--              así, crea el registro correspondiente en Partido_Quiniela solo
+--              si no existe ya.
+-- =============================================================================
+CREATE TRIGGER tr_InsertarPartidoEnQuinielasRelacionadas
+ON Partido
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Partido_Quiniela (partido_id, quiniela_id)
+    SELECT i.partido_id, q.quiniela_id
+    FROM inserted i
+    INNER JOIN Quiniela q ON q.torneo_id = i.torneo_id
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM Partido_Quiniela pq
+        WHERE pq.partido_id = i.partido_id AND pq.quiniela_id = q.quiniela_id
+    );
+END;
+GO

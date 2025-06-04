@@ -171,4 +171,10 @@ h1 {
     transition: background 0.2s ease-in-out;
 }
 
+.no-data-row td {
+    text-align: center;
+    font-style: italic;
+    padding: 1rem;
+    color: var(--text-light);
+}
 

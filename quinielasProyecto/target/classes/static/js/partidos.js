@@ -32,7 +32,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${p.golesLocal}</td>
                     <td>${p.golesVisitante}</td>
                     <td>${p.torneoNombre}</td>
-                    <td><button class="btn-finalizar btn-primary" data-id="${p.partidoId}">Finalizar</button></td>
+                    <td>
+                        <button class="btn-finalizar btn-primary"
+                                data-id="${p.partidoId}"
+                                ${p.estadoPartido === 'Finalizado' ? 'disabled' : ''}>
+                            ${p.estadoPartido === 'Finalizado' ? 'Finalizado' : 'Finalizar'}
+                        </button>
+                    </td>
                 `;
                 tbody.appendChild(row);
             });

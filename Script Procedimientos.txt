@@ -476,6 +476,12 @@ BEGIN
     SET NOCOUNT ON;
 
     BEGIN TRY
+        IF @fecha_inicio < CAST(GETDATE() AS DATE)
+        BEGIN
+           RAISERROR('La fecha de inicio del torneo no puede estar en el pasado.', 16, 1);
+           RETURN;
+        END
+
         IF @fecha_inicio > @fecha_cierre
         BEGIN
             RAISERROR('La fecha de inicio no puede ser posterior a la fecha de cierre.', 16, 1);

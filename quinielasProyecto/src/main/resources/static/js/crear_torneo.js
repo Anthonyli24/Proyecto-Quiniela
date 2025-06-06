@@ -11,12 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const fechaCierre = document.getElementById("fecha_cierre").value;
         const resultadoFinal = document.getElementById("resultado_final").value;
 
-        if (fechaInicio > fechaCierre) {
-            mensajeDiv.textContent = "La fecha de inicio no puede ser posterior a la fecha de cierre.";
-            mensajeDiv.style.color = "red";
-            return;
-        }
-
         const params = new URLSearchParams();
         params.append("nombre", nombre);
         params.append("fechaInicio", fechaInicio);
@@ -30,20 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             body: params.toString()
         })
-        .then(res => res.text().then(text => ({ ok: res.ok, text })))
-        .then(({ ok, text }) => {
-            mensajeDiv.textContent = text;
-            mensajeDiv.style.color = ok ? "green" : "red";
-            if (ok) {
-                form.reset();
-                setTimeout(() => {
-                    window.location.href = "partidos.html";
-                }, 1000);
-            }
-        })
-        .catch(() => {
-            mensajeDiv.textContent = "Error al registrar el torneo.";
-            mensajeDiv.style.color = "red";
-        });
+            .then(res => res.text().then(text => ({ ok: res.ok, status: res.status, text })))
+            .then(({ ok, status, text }) => {
+                mensajeDiv.textContent = text;
+                mensajeDiv.style.color = ok ? "green" : "red";
+                if (ok) {
+                    form.reset();
+                    setTimeout(() => {
+                        window.location.href = "partidos.html";
+                    }, 1000);
+                }
+            });
     });
 });

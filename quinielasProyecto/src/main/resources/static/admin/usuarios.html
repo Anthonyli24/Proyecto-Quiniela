@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuarios | Admin</title>
+    <link rel="stylesheet" href="/css/admin.css">
+    <style>
+        .acciones-superiores {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.5rem;
+            gap: 0.5rem;
+        }
+
+        .detail-table th, .detail-table td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        .btn-estado {
+            padding: 4px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-estado:hover {
+            background-color: #0056b3;
+        }
+
+    </style>
+</head>
+<body>
+<div class="navbar" id="navbar"></div>
+
+<div class="container">
+    <div class="acciones-superiores">
+        <button class="btn btn-primary" onclick="window.location.href='crear_usuario.html'">Agregar Usuario</button>
+    </div>
+
+    <table class="detail-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Usuario</th>
+            <th>Fecha Nacimiento</th>
+            <th>Rol</th>
+            <th>Estado</th>
+        </tr>
+        </thead>
+        <tbody id="usuarios-table-body">
+        </tbody>
+    </table>
+</div>
+<script src="/js/admin.js"></script>
+<script src="/js/usuarios.js"></script>
+</body>
+</html>

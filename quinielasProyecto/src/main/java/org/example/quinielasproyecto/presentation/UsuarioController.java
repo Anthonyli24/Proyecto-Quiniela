@@ -8,8 +8,12 @@ import org.example.quinielasproyecto.logic.dto.RegistroRequest;
 import org.example.quinielasproyecto.logic.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/usuarios")
@@ -76,5 +80,20 @@ public class UsuarioController {
         return usuarioService.registrarUsuario(request);
     }
 
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> obtenerUsuariosNoAdministradores() {
+        List<Map<String, Object>> usuarios = usuarioService.obtenerUsuariosNoAdmin();
+        return ResponseEntity.ok(usuarios);
+    }
 
+    @PutMapping("/{id}/estado")
+    public ResponseEntity<String> cambiarEstadoUsuario(@PathVariable int id) {
+        try {
+            String nuevoEstado = usuarioService.cambiarEstadoUsuario(id);
+            return ResponseEntity.ok(nuevoEstado);
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el estado.");
+        }
+    }
 }

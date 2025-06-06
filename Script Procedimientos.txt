@@ -608,3 +608,64 @@ BEGIN
     );
 END;
 GO
+
+
+-- =============================================================================
+-- PROCEDURE   : sp_ObtenerUsuariosNoAdministradores
+-- Tabla       : Usuario
+-- Descripción : Devuelve todos los usuarios cuyo rol no sea 'Administrador',
+--               excluyendo así a los usuarios con rol_id = 1.
+-- =============================================================================
+CREATE PROCEDURE sp_ObtenerUsuariosNoAdministradores
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        u.usuario_id,
+        u.nombre,
+        u.correo,
+        u.nombre_usuario,
+        u.fecha_nacimiento,
+        u.estado,
+        u.rol_id,
+        r.rol
+    FROM Usuario u
+    INNER JOIN Rol r ON u.rol_id = r.rol_id
+    WHERE r.rol <> 'Administrador';
+END;
+GO
+
+-- =============================================================================
+-- PROCEDURE   : sp_CambiarEstadoUsuario
+-- Tabla       : Usuario
+-- Descripción : Alterna el estado del usuario entre 'Activo' e 'Inactivo'
+-- =============================================================================
+CREATE PROCEDURE sp_CambiarEstadoUsuario
+    @usuario_id INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        DECLARE @estado_actual VARCHAR(50);
+
+        SELECT @estado_actual = estado FROM Usuario WHERE usuario_id = @usuario_id;
+
+        IF @estado_actual IS NULL
+        BEGIN
+            RAISERROR('Usuario no encontrado.', 16, 1);
+            RETURN;
+        END
+
+        UPDATE Usuario
+        SET estado = CASE WHEN @estado_actual = 'Activo' THEN 'Inactivo' ELSE 'Activo' END
+        WHERE usuario_id = @usuario_id;
+
+        SELECT estado FROM Usuario WHERE usuario_id = @usuario_id;
+    END TRY
+    BEGIN CATCH
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@ErrorMessage, 16, 1);
+    END CATCH
+END;

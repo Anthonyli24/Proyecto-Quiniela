@@ -82,13 +82,7 @@ public class PronosticarController {
             pronosticoService.registrarPronostico(pron);
 
 
-            System.out.println("Usuario ID: " + usuarioId);
-            System.out.println("Partido ID: " + dto.partidoId());
-            System.out.println("Goles Local: " + dto.golesLocal());
-            System.out.println("Goles Visitante: " + dto.golesVisitante());
-            System.out.println("Quiniela ID: " + dto.quinielaId());
-            System.out.println("Fecha: " + dto.fechaPronostico());
-            System.out.println("Hora: " + dto.horaPronostico());
+
 
 
             return ResponseEntity.ok(Map.of("mensaje", "Pronóstico registrado correctamente"));

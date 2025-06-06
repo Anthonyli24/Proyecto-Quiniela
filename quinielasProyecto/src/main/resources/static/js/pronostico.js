@@ -54,8 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${p.equipoVisitante || ''}</td>
                     <td>${formatDate(p.fechaPartido)}</td>
                     <td>${formatTime(p.horaPartido)}</td>
-                    <td>${p.golesLocal}</td>
-                    <td>${p.golesVisitante}</td>
+                    <td>${p.golesLocal ?? ''}</td>
+                    <td>${p.golesVisitante ?? ''}</td>
                     <td>${p.estadoPartido || 'Pendiente'}</td>
                     <td>${boton}</td>
                 `;
@@ -64,14 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 tbody.querySelectorAll('.btn-pronosticar').forEach(btn => {
                     btn.addEventListener('click', e => {
-                        console.log("Click detectado en botón pronosticar");
                         const partidoId = parseInt(e.currentTarget.getAttribute('data-id'));
                         const partido = data.partidos.find(p => p.partidoId === partidoId);
-                        console.log("Partido encontrado:", partido);
                         if (partido) abrirModal(partido);
                     });
                 });
-
 
             } else {
                 tbody.innerHTML = `
@@ -108,11 +105,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const ahora = new Date();
         modalInfo.innerHTML = `
-    <strong>${partido.equipoLocal}</strong> vs 
-    <strong>${partido.equipoVisitante}</strong><br>
-    Fecha del partido: ${ahora.toLocaleDateString()}<br>
-    Hora del partido: ${ahora.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-`;
+            <strong>${partido.equipoLocal}</strong> vs 
+            <strong>${partido.equipoVisitante}</strong><br>
+            Fecha del partido: ${formatDate(partido.fechaPartido)}<br>
+            Hora del partido: ${formatTime(partido.horaPartido)}
+        `;
 
         inputGL.value = partido.golesLocal ?? '';
         inputGV.value = partido.golesVisitante ?? '';
@@ -155,9 +152,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 return res.json();
             })
             .then(res => {
-                alert("¡Pronóstico registrado exitosamente!");
+                // Actualiza dinámicamente la fila del partido
+                const fila = document.querySelector(`button[data-id="${partidoSeleccionado.partidoId}"]`).closest('tr');
+
+                if (fila) {
+                    fila.children[4].textContent = gl; // Goles local
+                    fila.children[5].textContent = gv; // Goles visitante
+
+                    const btn = fila.querySelector('button.btn-pronosticar');
+                    if (btn) {
+                        btn.textContent = 'Pronosticado';
+                        btn.disabled = true;
+                        btn.classList.remove('btn-pronosticar');
+                    }
+                }
                 cerrarModal();
-                location.reload();
             })
             .catch(err => {
                 alert(err.message);
@@ -165,8 +174,4 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     btnCancelar.addEventListener('click', cerrarModal);
-
 });
-
-
-

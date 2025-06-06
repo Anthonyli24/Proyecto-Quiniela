@@ -669,3 +669,67 @@ BEGIN
         RAISERROR(@ErrorMessage, 16, 1);
     END CATCH
 END;
+
+
+- =============================================================================
+-- TRIGGER: TR_CalcularPuntaje
+-- Descripción : Calcula las puntuaciones de los pronósticos de los usuarios en cuanto se haga un update en el estado de algun partido.
+-- Resultado : Tabla de ranking actualizada con los puntajes de los jugadores.
+-- =============================================================================
+
+                        CREATE TRIGGER TR_CalcularPuntaje
+                            ON Partido
+                            AFTER UPDATE
+                            AS
+                        BEGIN
+                            SET NOCOUNT ON;
+
+                            -- Solo actuar si el estado cambió a 'Finalizado'
+                            IF EXISTS (SELECT 1
+                                       FROM inserted i
+                                       WHERE i.estado_partido = 'Finalizado'
+                                         AND (SELECT estado_partido FROM deleted d WHERE d.partido_id = i.partido_id) <>
+                                             'Finalizado')
+                                BEGIN
+                                    -- Recorremos todos los partidos finalizados recientemente
+                                    DECLARE @partido_id INT, @goles_local INT, @goles_visitante INT;
+
+                                    DECLARE partido_cursor CURSOR FOR
+                                        SELECT i.partido_id, i.goles_local, i.goles_visitante
+                                        FROM inserted i
+                                                 JOIN deleted d ON i.partido_id = d.partido_id
+                                        WHERE i.estado_partido = 'Finalizado'
+                                          AND d.estado_partido <> 'Finalizado';
+
+                                    OPEN partido_cursor;
+                                    FETCH NEXT FROM partido_cursor INTO @partido_id, @goles_local, @goles_visitante;
+
+                                    WHILE @@FETCH_STATUS = 0
+                                        BEGIN
+                                            -- Actualizamos el puntaje de cada pronóstico asociado a este partido
+                                            UPDATE i
+                                            SET i.puntaje = i.puntaje +
+                                                            CASE
+                                                                WHEN p.goles_local = @goles_local AND p.goles_visita = 	@goles_visitante
+                                                                    THEN 3
+                                                                WHEN
+                                                                    (p.goles_local > p.goles_visita AND @goles_local > @goles_visitante) OR
+                                                                    (p.goles_local < p.goles_visita AND @goles_local < @goles_visitante) OR
+                                                                    (p.goles_local = p.goles_visita AND @goles_local = @goles_visitante)
+                                                                    THEN 1
+                                                                ELSE 0
+                                                                END
+                                            FROM Inscripcion i
+                                                     INNER JOIN Pronostico p
+                                                                ON p.usuario_id = i.usuario_id AND p.quiniela_id = i.quiniela_id
+                                            WHERE p.partido_id = @partido_id;
+
+                                            FETCH NEXT FROM partido_cursor INTO @partido_id, @goles_local, @goles_visitante;
+                                        END
+
+                                    CLOSE partido_cursor;
+                                    DEALLOCATE partido_cursor;
+                                END
+                        END;
+GO
+

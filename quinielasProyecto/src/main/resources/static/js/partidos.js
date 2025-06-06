@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${p.golesLocal}</td>
                     <td>${p.golesVisitante}</td>
                     <td>${p.torneoNombre}</td>
-                    <td><button class="btn-primary" data-id="${p.partidoId}">Finalizar</button></td>
+                    <td><button class="btn-finalizar btn-primary" data-id="${p.partidoId}">Finalizar</button></td>
                 `;
                 tbody.appendChild(row);
             });

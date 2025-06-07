@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <td>${p.golesVisitante}</td>
                     <td>${p.torneoNombre}</td>
                     <td>
-                        <button class="btn-finalizar btn-primary"
+                        <button class="btn-finalizar btn btn-secondary"
                                 data-id="${p.partidoId}"
                                 ${p.estadoPartido === 'Finalizado' ? 'disabled' : ''}>
                             ${p.estadoPartido === 'Finalizado' ? 'Finalizado' : 'Finalizar'}
@@ -69,13 +69,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 .then(data => {
                     alert("Partido finalizado exitosamente.");
 
-                    // ✅ Actualiza la fila del partido en la tabla
                     const row = button.closest('tr');
-                    row.children[2].textContent = 'Finalizado'; // Estado del partido
-                    row.children[5].textContent = data.golesLocal; // Goles local
-                    row.children[6].textContent = data.golesVisitante; // Goles visitante
+                    row.children[2].textContent = 'Finalizado';
+                    row.children[5].textContent = data.golesLocal;
+                    row.children[6].textContent = data.golesVisitante;
 
-                    // ✅ Opcional: desactivar el botón de finalizar
                     button.disabled = true;
                     button.textContent = 'Finalizado';
                 })

@@ -121,7 +121,7 @@ CREATE TABLE Premio_Usuario (
     FOREIGN KEY (premio_id) REFERENCES Premio(premio_id)
 );
 
-INSERT INTO Torneo (torneo_nombre, fecha_inicio, fecha_cierre, resultado_final) VALUES ('Champions League' ,'2024-09-17', '2025-05-31', NULL);
+INSERT INTO Torneo (torneo_nombre, fecha_inicio, fecha_cierre, resultado_final) VALUES ('Champions League' ,'2024-09-17', '2025-06-31', NULL);
 INSERT INTO Torneo (torneo_nombre, fecha_inicio, fecha_cierre, resultado_final) VALUES ('Liga Proamerica' ,'2025-06-17', '2025-07-30', NULL);
 
 INSERT INTO Equipo (equipo_id, nombre_equipo) VALUES
